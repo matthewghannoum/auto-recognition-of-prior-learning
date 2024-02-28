@@ -1,5 +1,16 @@
 # Prototyping
 
+## Getting the Precomputed Data
+
+> [!WARNING]  
+> Do not run the code unnecessarily, **especially notebooks that web scrape like get_degree_subjects.ipynb**. Note only is it wasted computation that will take up time, but in the case of the web scraping notebooks, we don't want to send unnecessary web traffic to UTS.
+
+Instead you can download the precomputed data here: [Google Drive Link](https://drive.google.com/drive/folders/1xwK88pElZCy7YvjvOR1VqqkPlkPmxasY?usp=sharing)
+
+Then copy the folders inside it (not the folder itself), into the root of the prototyping directory.
+
+## Order of Execution, Inputs and Outputs
+
 This directory is meant as a place to commit code used for data collection, processing and NLP models.
 
 Currently, you can run the following notebooks (in the given order) to get the following outputs:
