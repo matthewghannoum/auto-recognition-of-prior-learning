@@ -1,3 +1,18 @@
+# ---
+# Project Specific
+# ---
+
+prototyping/course_programs/*
+prototyping/subjects_cleaned/*
+prototyping/word2vec_embeddings/*
+
+# ---
+# Python Boilerplate
+# ---
+
+# Mac OS
+.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
