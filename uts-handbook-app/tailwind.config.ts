@@ -24,6 +24,12 @@ const config: Config = {
         dark: "#323232",
       },
       "white": "#FFFFFF",
+      "black": "#000000",
+      "blue": {
+        DEFAULT: "#0d41d1",
+        light: "#0f4beb",
+        dark: "#0d41d1",
+      }
     }
   },
   plugins: [],
