@@ -2,9 +2,13 @@
 # Project Specific
 # ---
 
+# Prototyping file outputs
 prototyping/course_programs/*
 prototyping/subjects_cleaned/*
 prototyping/word2vec_embeddings/*
+
+# application data
+db/
 
 # ---
 # Python Boilerplate
