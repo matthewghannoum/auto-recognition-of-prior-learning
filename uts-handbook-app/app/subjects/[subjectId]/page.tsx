@@ -33,6 +33,14 @@ const MdA = ({ children, href }: { children: string; href: string }) => (
   </Link>
 );
 
+const MdOl = ({ children }: { children: ReactNode }) => (
+  <ol className="list-inside list-decimal">{children}</ol>
+);
+
+const MdUl = ({ children }: { children: ReactNode }) => (
+  <ul className="list-inside list-disc">{children}</ul>
+);
+
 const MdTable = ({ children }: { children: ReactNode }) => (
   <table className="my-4">{children}</table>
 );
@@ -46,6 +54,8 @@ const MdTr = ({ children }: { children: ReactNode }) => <tr>{children}</tr>;
 const MdTd = ({ children }: { children: string }) => (
   <td className="py-2 pr-4 text-left">{children}</td>
 );
+
+const MdBr = () => <></>;
 
 const options = {
   overrides: {
@@ -64,6 +74,12 @@ const options = {
     a: {
       component: MdA,
     },
+    ol: {
+      component: MdOl,
+    },
+    ul: {
+      component: MdUl,
+    },
     table: {
       component: MdTable,
     },
@@ -75,6 +91,9 @@ const options = {
     },
     td: {
       component: MdTd,
+    },
+    br: {
+      component: MdBr,
     },
   },
 };
