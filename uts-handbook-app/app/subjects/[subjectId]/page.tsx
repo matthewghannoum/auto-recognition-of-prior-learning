@@ -2,8 +2,9 @@ import prisma from "@/app/utils/prisma";
 import Image from "next/image";
 import Markdown from "markdown-to-jsx";
 import Link from "next/link";
+import { ReactNode } from "react";
 
-function capitalizeFirstLetter(string) {
+function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
@@ -17,16 +18,33 @@ async function getData(subjectId: string) {
 const MdH1H2 = ({ children }: { children: string }) => (
   <h3 className="text-2xl font-bold">{children}</h3>
 );
+
 const MdH3 = ({ children }: { children: string }) => (
   <h3 className="text-2xl font-bold">{children}</h3>
 );
+
 const MdH4 = ({ children }: { children: string }) => (
-  <h4 className="text-md font-bold">{children}</h4>
+  <h4 className="text-lg font-bold">{children}</h4>
 );
+
 const MdA = ({ children, href }: { children: string; href: string }) => (
   <Link href={href} className="text-blue hover:text-blue-light">
     {children}
   </Link>
+);
+
+const MdTable = ({ children }: { children: ReactNode }) => (
+  <table className="my-4">{children}</table>
+);
+
+const MdTh = ({ children }: { children: string }) => (
+  <th className="text-left">{children}</th>
+);
+
+const MdTr = ({ children }: { children: ReactNode }) => <tr>{children}</tr>;
+
+const MdTd = ({ children }: { children: string }) => (
+  <td className="py-2 pr-4 text-left">{children}</td>
 );
 
 const options = {
@@ -46,6 +64,18 @@ const options = {
     a: {
       component: MdA,
     },
+    table: {
+      component: MdTable,
+    },
+    th: {
+      component: MdTh,
+    },
+    tr: {
+      component: MdTr,
+    },
+    td: {
+      component: MdTd,
+    },
   },
 };
 
@@ -56,7 +86,6 @@ export default async function Page({
   params: { subjectId: string };
 }) {
   const data = await getData(params.subjectId);
-  console.log("data", data.subject?.requisites);
 
   if (!data || !data.subject) {
     return <div>Subject not found</div>;
@@ -84,7 +113,7 @@ export default async function Page({
       {data && data.subject && (
         <main>
           <div className="w-full">
-            <div className="w-full bg-black flex justify-start items-center">
+            <div className="flex w-full items-center justify-start bg-black">
               <Image
                 alt="UTS logo"
                 src="/uts-logo.png"
@@ -93,14 +122,14 @@ export default async function Page({
               />
 
               <div className="w-full">
-                <h1 className="text-center text-white font-bold text-3xl">
+                <h1 className="text-center text-3xl font-bold text-white">
                   University of Technology Sydney Handbook
                 </h1>
               </div>
             </div>
 
             <div className="p-16">
-              <div className="max-w-screen-lg mx-auto flex flex-col justify-start items-start gap-4">
+              <div className="mx-auto flex max-w-screen-lg flex-col items-start justify-start gap-4">
                 <h2 className="text-3xl font-bold">
                   {id}: {name}
                 </h2>
@@ -131,7 +160,7 @@ export default async function Page({
                 </h3>
 
                 <Markdown
-                  className="flex flex-col justify-start items-start gap-4"
+                  className="flex flex-col items-start justify-start gap-4"
                   options={options}
                 >
                   {content}
