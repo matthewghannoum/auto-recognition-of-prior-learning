@@ -76,9 +76,7 @@ export default async function Page({
             <div className="w-full">
               <div className="flex w-full items-center justify-start bg-black">
                 <Link
-                  href="https://www.uts.edu.au/"
-                  rel="noopener noreferrer"
-                  target="_blank"
+                  href="/"
                 >
                   <Image
                     alt="UTS logo"

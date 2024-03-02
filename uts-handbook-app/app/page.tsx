@@ -7,9 +7,7 @@ export default function Home() {
     <main>
       <div className="bg-gray-dark p-16 flex flex-col justify-center items-center gap-6 relative">
         <Link
-          href="https://www.uts.edu.au/"
-          rel="noopener noreferrer"
-          target="_blank"
+          href="/"
         >
           <Image
             className="absolute left-0 top-0"
