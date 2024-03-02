@@ -6,6 +6,7 @@
 prototyping/course_programs/*
 prototyping/subjects_cleaned/*
 prototyping/word2vec_embeddings/*
+prototyping/document_embeddings/*
 
 # application data
 db/
