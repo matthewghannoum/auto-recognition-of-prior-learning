@@ -8,6 +8,9 @@ prototyping/subjects_cleaned/*
 prototyping/word2vec_embeddings/*
 prototyping/document_embeddings/*
 
+# nlp server
+nlp_server_venv/
+
 # application data
 db/
 
