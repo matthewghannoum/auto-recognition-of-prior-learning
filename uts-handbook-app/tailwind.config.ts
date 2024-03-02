@@ -13,24 +13,24 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      colors: {
+        gray: {
+          DEFAULT: "#EBEBEB",
+          light: "#EBEBEB",
+          dark: "#323232",
+        },
+        white: "#FFFFFF",
+        black: "#000000",
+        blue: {
+          DEFAULT: "#0d41d1",
+          light: "#0f4beb",
+          dark: "#0d41d1",
+        },
+      },
     },
     fontFamily: {
-      "sans": ["DM Sans", "sans-serif"],
+      sans: ["DM Sans", "sans-serif"],
     },
-    colors: {
-      "gray": {
-        DEFAULT: "#EBEBEB",
-        light: "#EBEBEB",
-        dark: "#323232",
-      },
-      "white": "#FFFFFF",
-      "black": "#000000",
-      "blue": {
-        DEFAULT: "#0d41d1",
-        light: "#0f4beb",
-        dark: "#0d41d1",
-      }
-    }
   },
   plugins: [],
 };

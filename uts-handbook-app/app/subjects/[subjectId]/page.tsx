@@ -62,8 +62,6 @@ export default async function Page({
     },
   } = data;
 
-  console.log("here", data);
-
   const sessions_text = sessions
     .map((s) => capitalizeFirstLetter(s.toLowerCase()))
     .join(", ");
