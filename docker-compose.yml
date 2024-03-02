@@ -1,5 +1,17 @@
 version: '3.7'
 services:
+  nlp_server:
+    container_name: nlp_server
+    build:
+      context: ./nlp-server
+      dockerfile: Dockerfile
+    ports:
+      - 6000:6000
+    volumes:
+      - ./nlp-server:/app
+    networks:
+      - weaviate
+
   mongodb:
     container_name: mongodb
     image: mongo:latest
@@ -32,10 +44,15 @@ services:
       # Enables API key authentication.
       AUTHENTICATION_APIKEY_ENABLED: 'true'
       # List one or more keys, separated by commas. Each key corresponds to a specific user identity below.
-      AUTHENTICATION_APIKEY_ALLOWED_KEYS: ${AUTHENTICATION_APIKEY_ALLOWED_KEYS} 
+      AUTHENTICATION_APIKEY_ALLOWED_KEYS: ${AUTHENTICATION_APIKEY_ALLOWED_KEYS}
       # List one or more user identities, separated by commas. Each identity corresponds to a specific key above.
-      AUTHENTICATION_APIKEY_USERS: ${AUTHENTICATION_APIKEY_USERS} 
+      AUTHENTICATION_APIKEY_USERS: ${AUTHENTICATION_APIKEY_USERS}
       PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
       DEFAULT_VECTORIZER_MODULE: 'none'
       ENABLE_MODULES: 'text2vec-cohere,text2vec-huggingface,text2vec-palm,text2vec-openai,generative-openai,generative-cohere,generative-palm,ref2vec-centroid,reranker-cohere,qna-openai'
       CLUSTER_HOSTNAME: 'node1'
+    networks:
+      - weaviate
+
+networks:
+  weaviate:
