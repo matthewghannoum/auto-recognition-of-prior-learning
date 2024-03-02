@@ -95,7 +95,7 @@ export default async function Page({
                 </div>
               </div>
 
-              <div className="p-16">
+              <div className="min-h-[65vh] p-16">
                 <div className="mx-auto flex max-w-screen-lg flex-col items-start justify-start gap-4">
                   <h2 className="text-3xl font-bold">
                     {id}: {name}
