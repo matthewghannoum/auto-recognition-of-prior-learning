@@ -1,8 +1,7 @@
 import prisma from "@/app/utils/prisma";
 import Image from "next/image";
-import Markdown from "markdown-to-jsx";
-import Link from "next/link";
-import { ReactNode } from "react";
+import CMarkdown from "@/app/components/CMarkdown";
+import { Prisma } from "@prisma/client";
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -15,88 +14,26 @@ async function getData(subjectId: string) {
   return { subject };
 }
 
-const MdH1H2 = ({ children }: { children: string }) => (
-  <h3 className="text-2xl font-bold">{children}</h3>
-);
+type Requisite = {
+  subjectId: string;
+  subjectName: string;
+}[];
 
-const MdH3 = ({ children }: { children: string }) => (
-  <h3 className="text-2xl font-bold">{children}</h3>
-);
+function getRequisitesString(requisites: Prisma.JsonValue[]) {
+  const r = requisites as Requisite[];
 
-const MdH4 = ({ children }: { children: string }) => (
-  <h4 className="text-lg font-bold">{children}</h4>
-);
+  if (r.length === 0) return "None";
 
-const MdA = ({ children, href }: { children: string; href: string }) => (
-  <Link href={href} className="text-blue hover:text-blue-light">
-    {children}
-  </Link>
-);
-
-const MdOl = ({ children }: { children: ReactNode }) => (
-  <ol className="list-inside list-decimal">{children}</ol>
-);
-
-const MdUl = ({ children }: { children: ReactNode }) => (
-  <ul className="list-inside list-disc">{children}</ul>
-);
-
-const MdTable = ({ children }: { children: ReactNode }) => (
-  <table className="my-4">{children}</table>
-);
-
-const MdTh = ({ children }: { children: string }) => (
-  <th className="text-left">{children}</th>
-);
-
-const MdTr = ({ children }: { children: ReactNode }) => <tr>{children}</tr>;
-
-const MdTd = ({ children }: { children: string }) => (
-  <td className="py-2 pr-4 text-left">{children}</td>
-);
-
-const MdBr = () => <></>;
-
-const options = {
-  overrides: {
-    h1: {
-      component: MdH1H2,
-    },
-    h2: {
-      component: MdH1H2,
-    },
-    h3: {
-      component: MdH3,
-    },
-    h4: {
-      component: MdH4,
-    },
-    a: {
-      component: MdA,
-    },
-    ol: {
-      component: MdOl,
-    },
-    ul: {
-      component: MdUl,
-    },
-    table: {
-      component: MdTable,
-    },
-    th: {
-      component: MdTh,
-    },
-    tr: {
-      component: MdTr,
-    },
-    td: {
-      component: MdTd,
-    },
-    br: {
-      component: MdBr,
-    },
-  },
-};
+  return r
+    .map((requisiteGroup) => {
+      return requisiteGroup
+        .map((requisite, index) => {
+          return `${requisite.subjectId} ${requisite.subjectName}`;
+        })
+        .join(" OR ");
+    })
+    .join(" AND ");
+}
 
 // all components are server side rendered by default
 export default async function Page({
@@ -122,6 +59,8 @@ export default async function Page({
       antiRequisites,
     },
   } = data;
+
+  console.log("here", data);
 
   const sessions_text = sessions
     .map((s) => capitalizeFirstLetter(s.toLowerCase()))
@@ -159,31 +98,14 @@ export default async function Page({
                 </h3>
 
                 <h3 className="text-lg">
-                  Requisites:{" "}
-                  {requisites
-                    .map((r) => {
-                      r = r as { id: string; name: string };
-                      return `${r.id} ${r.name}`;
-                    })
-                    .join(", ")}
+                  Requisites: {getRequisitesString(requisites)}
                 </h3>
 
                 <h3 className="text-lg">
-                  AntiRequisites:{" "}
-                  {antiRequisites
-                    .map((r) => {
-                      r = r as { id: string; name: string };
-                      return `${r.id} ${r.name}`;
-                    })
-                    .join(", ")}
+                  AntiRequisites: {getRequisitesString(antiRequisites)}
                 </h3>
 
-                <Markdown
-                  className="flex flex-col items-start justify-start gap-4"
-                  options={options}
-                >
-                  {content}
-                </Markdown>
+                <CMarkdown content={content} />
               </div>
             </div>
           </div>
