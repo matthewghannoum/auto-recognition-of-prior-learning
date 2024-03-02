@@ -73,7 +73,7 @@ export default function Home() {
           {courseAreas.map((area, index) => (
             <Link
               className={`text-white text-center bg-${colors[index]}-${colorLevel} p-4 rounded-md`}
-              href={`/area/${area}`}
+              href={`/area/${area.toLowerCase().replace(/ /g, "-")}`}
               key={index}
             >
               {area}
