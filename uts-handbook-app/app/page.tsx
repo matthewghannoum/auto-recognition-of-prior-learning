@@ -1,11 +1,24 @@
 import Image from "next/image";
 import SearchBar from "./components/SearchBar";
+import Link from "next/link";
 
 export default function Home() {
   return (
     <main>
       <div className="bg-gray-dark p-16 flex flex-col justify-center items-center gap-6 relative">
-        <Image className="absolute left-0 top-0" alt="UTS logo" src="/uts-logo.png" width="100" height="100" />
+        <Link
+          href="https://www.uts.edu.au/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Image
+            className="absolute left-0 top-0"
+            alt="UTS logo"
+            src="/uts-logo.png"
+            width="100"
+            height="100"
+          />
+        </Link>
 
         <h1 className="text-center text-white font-bold text-5xl">
           University of Technology Sydney <br />

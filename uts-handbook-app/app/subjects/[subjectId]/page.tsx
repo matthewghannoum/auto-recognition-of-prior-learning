@@ -3,6 +3,7 @@ import Image from "next/image";
 import CMarkdown from "@/app/components/CMarkdown";
 import { Prisma } from "@prisma/client";
 import Footer from "@/app/components/Footer";
+import Link from "next/link";
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -74,12 +75,18 @@ export default async function Page({
           <main>
             <div className="w-full">
               <div className="flex w-full items-center justify-start bg-black">
-                <Image
-                  alt="UTS logo"
-                  src="/uts-logo.png"
-                  width="100"
-                  height="100"
-                />
+                <Link
+                  href="https://www.uts.edu.au/"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <Image
+                    alt="UTS logo"
+                    src="/uts-logo.png"
+                    width="100"
+                    height="100"
+                  />
+                </Link>
 
                 <div className="w-full">
                   <h1 className="text-center text-3xl font-bold text-white">
