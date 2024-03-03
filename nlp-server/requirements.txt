@@ -9,6 +9,7 @@ click==8.1.7
 cryptography==42.0.5
 filelock==3.13.1
 Flask==3.0.2
+Flask-Cors==4.0.0
 fsspec==2024.2.0
 grpcio==1.62.0
 grpcio-health-checking==1.62.0

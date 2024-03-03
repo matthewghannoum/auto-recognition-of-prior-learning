@@ -6,7 +6,7 @@ services:
       context: ./nlp-server
       dockerfile: Dockerfile
     ports:
-      - 6000:6000
+      - 8000:8000
     volumes:
       - ./nlp-server:/app
     networks:

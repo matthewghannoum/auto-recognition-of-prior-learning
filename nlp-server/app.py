@@ -1,7 +1,12 @@
 import sys
+from urllib.parse import unquote
+
 from dotenv import dotenv_values
+
 from flask import Flask
 from flask import request, jsonify
+from flask_cors import CORS
+
 import weaviate
 import weaviate.classes as wvc
 from sentence_transformers import SentenceTransformer
@@ -25,11 +30,11 @@ model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
 subjects = client.collections.get("Subject")
 
 app = Flask(__name__)
-
+CORS(app)
 
 @app.get("/search/subject")
 def hello():
-    query = request.args.get("query")
+    query = unquote(request.args.get("query"))
     print("query:", query, file=sys.stderr)
     query_embedding = model.encode(query, normalize_embeddings=True)
 
@@ -48,4 +53,4 @@ def hello():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=6000)
+    app.run(debug=True, host="0.0.0.0", port=8000)

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import SearchBar from "./components/SearchBar";
+import SearchBar from "./components/search/SearchBar";
 import Link from "next/link";
 import Footer from "./components/Footer";
 
@@ -38,10 +38,10 @@ const colors = [
 
 const colorLevel = "500";
 
-const hiddenColorImport = colors
-  .map((color) => `bg-${color}-${colorLevel}`)
-  .join(" ");
-console.log(hiddenColorImport);
+// const hiddenColorImport = colors
+//   .map((color) => `bg-${color}-${colorLevel}`)
+//   .join(" ");
+// console.log(hiddenColorImport);
 
 export default function Home() {
   return (
