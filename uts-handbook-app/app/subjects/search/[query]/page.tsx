@@ -3,7 +3,6 @@
 import SearchBar from "@/app/components/search/SearchBar";
 import { SkeletonCard } from "@/app/components/search/SkeletonCard";
 import fetcher from "@/app/utils/fetcher";
-import prisma from "@/app/utils/prisma";
 import Link from "next/link";
 import useSWR from "swr";
 
