@@ -1,20 +1,27 @@
+import getHeaderId from "@/app/utils/getHeaderId";
 import Markdown from "markdown-to-jsx";
 import Link from "next/link";
 import { ReactNode } from "react";
 
-const MdH1H2 = ({ children }: { children: string }) => (
-  <h3 className="text-2xl font-bold">{children}</h3>
+const MdH1H2 = ({ children }: { children: string | string[] }) => (
+  <h3 id={getHeaderId(children)} className="text-2xl font-bold">
+    {children}
+  </h3>
 );
 
-const MdH3 = ({ children }: { children: string }) => (
-  <h3 className="text-2xl font-bold">{children}</h3>
+const MdH3 = ({ children }: { children: string | string[] }) => (
+  <h3 id={getHeaderId(children)} className="text-2xl font-bold">
+    {children}
+  </h3>
 );
 
-const MdH4 = ({ children }: { children: string }) => (
-  <h4 className="text-lg font-bold">{children}</h4>
+const MdH4 = ({ children }: { children: string | string[] }) => (
+  <h4 id={getHeaderId(children)} className="text-lg font-bold">
+    {children}
+  </h4>
 );
 
-const MdA = ({ children, href }: { children: string; href: string }) => (
+const MdA = ({ children, href }: { children: string | string[]; href: string }) => (
   <Link href={href} className="text-blue hover:text-blue-light">
     {children}
   </Link>
@@ -32,13 +39,13 @@ const MdTable = ({ children }: { children: ReactNode }) => (
   <table className="my-4">{children}</table>
 );
 
-const MdTh = ({ children }: { children: string }) => (
+const MdTh = ({ children }: { children: string | string[] }) => (
   <th className="text-left">{children}</th>
 );
 
 const MdTr = ({ children }: { children: ReactNode }) => <tr>{children}</tr>;
 
-const MdTd = ({ children }: { children: string }) => (
+const MdTd = ({ children }: { children: string | string[] }) => (
   <td className="py-2 pr-4 text-left">{children}</td>
 );
 

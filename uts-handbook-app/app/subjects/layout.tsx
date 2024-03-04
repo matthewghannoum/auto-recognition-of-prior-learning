@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Footer from "../components/Footer";
+import Footer from "../components/navigation/Footer";
 import Image from "next/image";
-import Header from "../components/Header";
+import Header from "../components/navigation/Header";
 
 const SubjectsLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -9,11 +9,7 @@ const SubjectsLayout = ({ children }: { children: React.ReactNode }) => {
       <Header />
 
       <main>
-        <div className="w-full">
-          <div className="min-h-[65vh] p-16">
-            <div className="mx-auto max-w-screen-lg">{children}</div>
-          </div>
-        </div>
+        {children}
       </main>
 
       <Footer />

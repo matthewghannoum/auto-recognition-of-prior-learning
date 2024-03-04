@@ -1,7 +1,7 @@
 import Image from "next/image";
 import SearchBar from "./components/search/SearchBar";
 import Link from "next/link";
-import Footer from "./components/Footer";
+import Footer from "./components/navigation/Footer";
 
 const courseAreas = [
   "Analytics and Data Science",

@@ -48,30 +48,38 @@ export default function SearchResults({
   let subjectPreviews = data as SubjectSearchResult[];
 
   return (
-    <div className="w-full flex flex-col items-center justify-center gap-6">
-      <div className="w-full flex items-center justify-center">
-        <SearchBar currentSearchQuery={query} isLightBg={true} />
-      </div>
+    <div className="w-full">
+      <div className="min-h-[65vh] p-16">
+        <div className="mx-auto max-w-screen-lg">
+          <div className="w-full flex flex-col items-center justify-center gap-6">
+            <div className="w-full flex items-center justify-center">
+              <SearchBar currentSearchQuery={query} isLightBg={true} />
+            </div>
 
-      <h2 className="w-full text-left text-3xl my-4">Search Results for: {decodeURIComponent(query)}</h2>
+            <h2 className="w-full text-left text-3xl my-4">
+              Search Results for: {decodeURIComponent(query)}
+            </h2>
 
-      <div className="w-full flex flex-col items-center justify-center gap-4">
-        {isLoading && (
-          <>
-            {ten_zeros.map((_, i) => (
-              <SkeletonCard key={i} className="h-4 w-[250px]" />
-            ))}
-          </>
-        )}
+            <div className="w-full flex flex-col items-center justify-center gap-4">
+              {isLoading && (
+                <>
+                  {ten_zeros.map((_, i) => (
+                    <SkeletonCard key={i} className="h-4 w-[250px]" />
+                  ))}
+                </>
+              )}
 
-        {!isLoading && (
-          <>
-            {subjectPreviews &&
-              subjectPreviews.map((subject) => (
-                <SubjectCard key={subject.id} subject={subject} />
-              ))}
-          </>
-        )}
+              {!isLoading && (
+                <>
+                  {subjectPreviews &&
+                    subjectPreviews.map((subject) => (
+                      <SubjectCard key={subject.id} subject={subject} />
+                    ))}
+                </>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

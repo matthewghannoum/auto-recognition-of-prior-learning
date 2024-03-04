@@ -1,7 +1,7 @@
 import prisma from "@/app/utils/prisma";
-import Image from "next/image";
-import CMarkdown from "@/app/components/CMarkdown";
+import CMarkdown from "@/app/components/content/CMarkdown";
 import { Prisma } from "@prisma/client";
+import TableOfContents from "@/app/components/content/TableOfContents";
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -65,29 +65,37 @@ export default async function Page({
     .join(", ");
 
   return (
-    <>
-      {data && data.subject && (
-        <div className="flex flex-col items-start justify-start gap-4">
-          <h2 className="text-3xl font-bold">
-            {id}: {name}
-          </h2>
+    <div className="w-full">
+      <div className="min-h-[65vh] p-16 flex items-start justify-start gap-16">
+        <TableOfContents content={content} />
 
-          <h3 className="text-lg">
-            Credit points: {creditPoints}cp | Sessions: {sessions_text} | Result
-            type: {resultType}
-          </h3>
+        <div className="max-w-screen-xl pr-24">
+          {data && data.subject && (
+            <>
+              <div className="flex flex-col items-start justify-start gap-4">
+                <h2 className="text-3xl font-bold">
+                  {id}: {name}
+                </h2>
 
-          <h3 className="text-lg">
-            Requisites: {getRequisitesString(requisites)}
-          </h3>
+                <h3 className="text-lg">
+                  Credit points: {creditPoints}cp | Sessions: {sessions_text} |
+                  Result type: {resultType}
+                </h3>
 
-          <h3 className="text-lg">
-            AntiRequisites: {getRequisitesString(antiRequisites)}
-          </h3>
+                <h3 className="text-lg">
+                  Requisites: {getRequisitesString(requisites)}
+                </h3>
 
-          <CMarkdown content={content} />
+                <h3 className="text-lg">
+                  AntiRequisites: {getRequisitesString(antiRequisites)}
+                </h3>
+
+                <CMarkdown content={content} />
+              </div>
+            </>
+          )}
         </div>
-      )}
-    </>
+      </div>
+    </div>
   );
 }
