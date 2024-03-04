@@ -49,13 +49,13 @@ export default function SearchResults({
 
   return (
     <div className="w-full">
-      <div className="min-h-[65vh] p-16">
+      <div className="w-full flex items-center justify-center gap-4 py-8 bg-neutral-800">
+        <SearchBar currentSearchQuery={query} />
+      </div>
+
+      <div className="min-h-[65vh] px-16 pb-8 pt-4">
         <div className="mx-auto max-w-screen-lg">
           <div className="w-full flex flex-col items-center justify-center gap-6">
-            <div className="w-full flex items-center justify-center">
-              <SearchBar currentSearchQuery={query} isLightBg={true} />
-            </div>
-
             <h2 className="w-full text-left text-3xl my-4">
               Search Results for: {decodeURIComponent(query)}
             </h2>

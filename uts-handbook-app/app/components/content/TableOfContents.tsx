@@ -7,7 +7,7 @@ export default function TableOfContents({ content }: { content: string }) {
 
   return (
     <div className="sticky min-w-96 max-w-xl bg-gray-100 rounded-lg p-6 left-0 top-10">
-      <h4 className="mb-3">Contents</h4>
+      <h4 className="mb-3 text-xl">Contents</h4>
 
       <div className="flex flex-col items-start justify-start gap-1">
         {toc.map((item, index) => {
@@ -18,7 +18,7 @@ export default function TableOfContents({ content }: { content: string }) {
               key={index}
               className={level > 1 ? `pl-${(level - 1) * 6}` : ""}
             >
-              <Link href={`#${getHeaderId(item.title)}`}>{item.title}</Link>
+              <Link className="hover:text-blue-800" href={`#${getHeaderId(item.title)}`}>{item.title}</Link>
             </div>
           );
         })}
