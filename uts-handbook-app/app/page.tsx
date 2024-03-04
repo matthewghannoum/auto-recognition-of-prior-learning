@@ -21,20 +21,20 @@ const courseAreas = [
 
 // list all tailwind colors in array
 const colors = [
-  "red",
-  "amber",
-  "orange",
-  "yellow",
-  "lime",
   "green",
-  "blue",
-  "indigo",
-  "purple",
   "pink",
   "rose",
-  "emerald",
   "teal",
-].sort(() => Math.random() - 0.5);
+  "yellow",
+  "purple",
+  "red",
+  "emerald",
+  "amber",
+  "lime",
+  "orange",
+  "blue",
+  "indigo",
+];
 
 const colorLevel = "500";
 
