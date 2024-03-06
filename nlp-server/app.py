@@ -35,12 +35,18 @@ CORS(app)
 @app.get("/search/subject")
 def hello():
     query = unquote(request.args.get("query"))
-    print("query:", query, file=sys.stderr)
+    limit = request.args.get("limit")
+    
+    if limit is None or int(limit) > 10:
+        limit = 10
+    else:
+        limit = int(limit)
+    
     query_embedding = model.encode(query, normalize_embeddings=True)
 
     query_result = subjects.query.near_vector(
         near_vector=query_embedding.tolist(),
-        limit=10,
+        limit=limit,
         return_metadata=wvc.query.MetadataQuery(certainty=True),
     )
 
@@ -50,7 +56,6 @@ def hello():
     ]
 
     return jsonify(response)
-
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=8000)
