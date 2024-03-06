@@ -6,10 +6,12 @@ import Link from "next/link";
 import RplPdf from "@/app/components/content/RPLPdf";
 import StudentDetailsForm from "@/app/components/forms/rpl/StudentDetailsForm";
 import SubjectSimilarityForm from "@/app/components/forms/rpl/SubjectSimilarityForm";
+import { SubjectIdAndName, RplSubjectPair } from "@/app/types";
 
-type SubjectIdAndName = { id: string; name: string };
-
-const getSimilarSubjects = async (content: string) => {
+const getSimilarSubjects = async (
+  content: string,
+  previousSubject: SubjectIdAndName
+) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_NLP_API}/search/subject?query=${content}&limit=5`
   );
@@ -18,9 +20,14 @@ const getSimilarSubjects = async (content: string) => {
     return null;
   }
 
-  const data = await res.json();
+  const rplSubjectPairs = ((await res.json()) as SubjectIdAndName[]).map(
+    (subject) => ({
+      previousSubject,
+      utsEquivlaentSubject: subject,
+    })
+  );
 
-  return data as SubjectIdAndName[];
+  return rplSubjectPairs;
 };
 
 export default function Page() {
@@ -36,9 +43,9 @@ export default function Page() {
   });
   const [subjectContent, setSubjectContent] = useState("");
   const [similarSubjects, setSimilarSubjects] = useState<
-    SubjectIdAndName[] | null
+    RplSubjectPair[] | null
   >(null);
-  const [selectedSubjects, setSelectedSubjects] = useState<SubjectIdAndName[]>(
+  const [selectedSubjects, setSelectedSubjects] = useState<RplSubjectPair[]>(
     []
   );
 
@@ -48,6 +55,16 @@ export default function Page() {
       [e.target.name]: e.target.value,
     });
   };
+
+  const removeRplPairByIds = (currentRplPair: RplSubjectPair) =>
+    setSelectedSubjects(
+      selectedSubjects.filter(
+        (rplPair) =>
+          currentRplPair.previousSubject.id === rplPair.previousSubject.id &&
+          currentRplPair.utsEquivlaentSubject.id !==
+            rplPair.utsEquivlaentSubject.id
+      )
+    );
 
   return (
     <div className="w-full">
@@ -87,8 +104,10 @@ export default function Page() {
               </div>
 
               <SubjectSimilarityForm
-                setSimilarSubjects={async () =>
-                  setSimilarSubjects(await getSimilarSubjects(subjectContent))
+                setSimilarSubjects={async (subject: SubjectIdAndName) =>
+                  setSimilarSubjects(
+                    await getSimilarSubjects(subjectContent, subject)
+                  )
                 }
                 setSubjectContent={setSubjectContent}
               />
@@ -99,21 +118,29 @@ export default function Page() {
                     <div className="w-full flex flex-col items-start justify-start gap-4">
                       <h3 className="text-lg">Selected Subjects</h3>
 
-                      {selectedSubjects.map((subject, index) => (
+                      {selectedSubjects.map((rplPair, index) => (
                         <div
                           key={index}
                           className="w-full flex items-center justify-between gap-4 rounded-xl bg-gray-100 p-4"
                         >
-                          <p>
-                            {subject.id}: {subject.name}
-                          </p>
+                          <div className="flex flex-col items-start justify-start gap-2">
+                            <p className="font-bold">
+                              {rplPair.utsEquivlaentSubject.id}:{" "}
+                              {rplPair.utsEquivlaentSubject.name}
+                            </p>
+
+                            <p className="text-sm">
+                              {rplPair.previousSubject.id}:{" "}
+                              {rplPair.previousSubject.name}
+                            </p>
+                          </div>
 
                           <div className="w-[80px] flex items-center justify-center gap-2">
                             {/* open page icon */}
                             <Link
                               target="_blank"
                               rel="noopener noreferrer"
-                              href={`/subjects/${subject.id}`}
+                              href={`/subjects/${rplPair.utsEquivlaentSubject.id}`}
                             >
                               <svg
                                 className="w-[40px] cursor-pointer"
@@ -134,13 +161,7 @@ export default function Page() {
                               version="1.1"
                               viewBox="0 0 100 100"
                               xmlns="http://www.w3.org/2000/svg"
-                              onClick={() =>
-                                setSelectedSubjects(
-                                  selectedSubjects.filter(
-                                    (s) => s.id !== subject.id
-                                  )
-                                )
-                              }
+                              onClick={() => removeRplPairByIds(rplPair)}
                             >
                               <g>
                                 <path d="m50 0c-27.602 0-50 22.398-50 50s22.398 50 50 50 50-22.398 50-50-22.398-50-50-50zm0 92c-23.199 0-42-18.801-42-42s18.801-42 42-42 42 18.801 42 42-18.801 42-42 42z" />
@@ -160,21 +181,29 @@ export default function Page() {
                   <>
                     <div className="w-full flex flex-col items-start justify-start gap-4">
                       <h3 className="text-lg">Similar Subjects</h3>
-                      {similarSubjects.map((subject) => (
+                      {similarSubjects.map((rplPair, index) => (
                         <div
                           className="w-full flex items-center justify-between gap-4 rounded-xl bg-gray-100 p-4"
-                          key={subject.id}
+                          key={index}
                         >
-                          <p>
-                            {subject.id}: {subject.name}
-                          </p>
+                          <div className="flex flex-col items-start justify-start gap-2">
+                            <p className="font-bold">
+                              {rplPair.utsEquivlaentSubject.id}:{" "}
+                              {rplPair.utsEquivlaentSubject.name}
+                            </p>
+
+                            <p className="text-sm">
+                              {rplPair.previousSubject.id}:{" "}
+                              {rplPair.previousSubject.name}
+                            </p>
+                          </div>
 
                           <div className="w-[80px] flex items-center justify-center gap-2">
                             {/* open page icon */}
                             <Link
                               target="_blank"
                               rel="noopener noreferrer"
-                              href={`/subjects/${subject.id}`}
+                              href={`/subjects/${rplPair.utsEquivlaentSubject.id}`}
                             >
                               <svg
                                 className="w-[40px] cursor-pointer"
@@ -198,7 +227,7 @@ export default function Page() {
                               onClick={() =>
                                 setSelectedSubjects([
                                   ...selectedSubjects,
-                                  subject,
+                                  rplPair,
                                 ])
                               }
                             >
