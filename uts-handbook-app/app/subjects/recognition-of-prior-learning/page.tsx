@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import Link from "next/link";
-import RplPdf from "@/app/components/content/RPLPdf";
+import RplPdf from "@/app/components/pdf/RplPdf";
 import StudentDetailsForm from "@/app/components/forms/rpl/StudentDetailsForm";
 import SubjectSimilarityForm from "@/app/components/forms/rpl/SubjectSimilarityForm";
 import { SubjectIdAndName, RplSubjectPair } from "@/app/types";
@@ -88,7 +88,12 @@ export default function Page() {
                 <StudentDetailsForm updateField={updateStudentDetailsFields} />
 
                 <PDFDownloadLink
-                  document={<RplPdf {...formData} />}
+                  document={
+                    <RplPdf
+                      formData={formData}
+                      selectedSubjects={selectedSubjects}
+                    />
+                  }
                   fileName="RPLForm.pdf"
                 >
                   {({ blob, url, loading, error }) =>
