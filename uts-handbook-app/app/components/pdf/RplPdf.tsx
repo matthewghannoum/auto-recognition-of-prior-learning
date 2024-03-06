@@ -30,7 +30,18 @@ export default function RplPdf({
 
   return (
     <Document>
-      <Page size="A4" style={{ width: "100%" }}>
+      <Page
+        size="A4"
+        style={{
+          width: "100%",
+          padding: "40px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          justifyContent: "flex-start",
+          gap: "25px",
+        }}
+      >
         <View>
           <Text>
             First Name: {fName} | Family Name: {sName}
@@ -58,18 +69,26 @@ export default function RplPdf({
             <Text>{"UTS Subject(s)"}</Text>
           </View>
 
-          <View
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "0",
-            }}
-          >
-            <Text style={{ width: "33%", border: "2px solid black" }}>Student Number</Text>
-            <Text style={{ width: "33%", border: "2px solid black" }}>Student Name</Text>
-            <Text style={{ width: "33%", border: "2px solid black" }}>Credits</Text>
+          <View>
+            {selectedSubjects.map((rplPair, index) => (
+              <View
+                key={index}
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  justifyContent: "flex-start",
+                  gap: "10px",
+                }}
+              >
+                <Text>
+                  {rplPair.utsEquivlaentSubject.id} -{" "}
+                  {rplPair.utsEquivlaentSubject.name} |{" "}
+                  {rplPair.previousSubject.id} - {rplPair.previousSubject.name}
+                </Text>
+              </View>
+            ))}
           </View>
         </View>
       </Page>
