@@ -1,0 +1,18 @@
+# UTS Computer Science
+
+university:
+  name: University of Technology Sydney
+  abbreviation: uts
+  degreeUrls:
+    - "https://www.handbook.uts.edu.au/courses/c09119.html"
+    - "https://handbook.uts.edu.au/courses/c09066.html"
+    - "https://handbook.uts.edu.au/courses/c10026.html"
+  subjectOptions:
+    urlPrefix: "https://handbook.uts.edu.au/subjects/"
+    startLine:
+      value: "# "
+      matchType: startsWith
+    endLine:
+      value: "[UTS: Handbook 2024](https://www.handbook.uts.edu.au/index.html)"
+      matchType: equals
+  embeddingMethod: sbert
