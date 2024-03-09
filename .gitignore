@@ -8,6 +8,11 @@ prototyping/subjects_cleaned/*
 prototyping/word2vec_embeddings/*
 prototyping/document_embeddings/*
 
+# etl pipeline
+etl-pipeline/etl_pipeline_venv/
+etl-pipeline/data/
+etl-pipeline/etl_pipeline_venv/
+
 # nlp server
 nlp_server_venv/
 
