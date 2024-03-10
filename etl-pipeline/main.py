@@ -1,137 +1,73 @@
 import os
-from dataclasses import dataclass
-from typing import Literal
 
-import yaml
+from tqdm import tqdm
 from bs4 import BeautifulSoup
+import html2text
+import strip_markdown
 
-from web_scraping import saveUrlAsHTML
+from get_university_configs import get_university_configs
+from scrape_degree_pages import scrape_degree_pages
+from get_subject_codes import get_subject_codes
 
-MatchType = Literal["equals", "contains", "startsWith", "endsWith"]
-EmbeddingModelType = Literal["sbert", "word2vec"]
+print("Loading university configurations...")
 
-
-@dataclass
-class SubjectOptions:
-    url_prefix: str
-    start_line: tuple[str, MatchType]
-    end_line: tuple[str, MatchType]
-
-
-@dataclass
-class UniversityConfig:
-    name: str
-    abbreviation: str
-    degree_urls: list[str]
-    subject_options: SubjectOptions
-    embedding_method: EmbeddingModelType
-
-
-university_configs: dict[str, UniversityConfig] = {}
-
-for filename in os.listdir("./configs/"):
-    if filename.endswith(".yml") or filename.endswith(".yaml"):
-        with open(f"./configs/{filename}", "r") as file:
-            university_config = yaml.safe_load(file)["university"]
-
-            subjectOptions = university_config["subjectOptions"]
-            subjectOptions = SubjectOptions(
-                subjectOptions["urlPrefix"],
-                (
-                    subjectOptions["startLine"]["value"],
-                    subjectOptions["startLine"]["matchType"],
-                ),
-                (
-                    subjectOptions["endLine"]["value"],
-                    subjectOptions["endLine"]["matchType"],
-                ),
-            )
-
-            university_configs[university_config["abbreviation"]] = UniversityConfig(
-                university_config["name"],
-                university_config["abbreviation"],
-                university_config["degreeUrls"],
-                subjectOptions,
-                university_config["embeddingMethod"],
-            )
+university_configs = get_university_configs()
 
 print("University configurations loaded successfully!")
-print("Number of universities:", len(university_configs))
+print("Number of universities:", len(university_configs), "\n")
 
-# scrapes degree pages
-for university_config in university_configs.values():
-    uni_dirs = [
-        name
-        for name in os.listdir("./data")
-        if os.path.isdir(os.path.join("./data", name))
-    ]
+print("Scraping university degree pages...")
 
-    abbreviation = university_config.abbreviation.lower()
-    uni_path = f"./data/{abbreviation}"
-
-    if abbreviation not in uni_dirs:
-        for degree_url in university_config.degree_urls:
-            degree_code = degree_url.split("/")[-1].replace(".html", "")
-            os.makedirs(f"{uni_path}/{degree_code}", exist_ok=True)
-            saveUrlAsHTML(degree_url, f"{uni_path}/{degree_code}/{degree_code}.html")
-
-        continue
-
-    for degree_url in university_config.degree_urls:
-        degree_code = degree_url.split("/")[-1].replace(".html", "")
-
-        if degree_code not in os.listdir(uni_path):
-            degree_code = degree_url.split("/")[-1].replace(".html", "")
-            os.makedirs(f"{uni_path}/{degree_code}", exist_ok=True)
-            saveUrlAsHTML(degree_url, f"{uni_path}/{degree_code}/{degree_code}.html")
+num_pages_scraped = scrape_degree_pages(university_configs)
 
 print("University degree pages saved successfully!")
+print("Number of NEW pages scraped:", num_pages_scraped, "\n")
 
-for filename in os.listdir("./data"):
-    if not os.path.isdir(os.path.join("./data", filename)):
-        continue
+print("Getting set of subject codes...")
 
-    uni = filename
+university_subjects = get_subject_codes(university_configs)
 
-    university_config = university_configs[uni]
-    urlPrefix = university_config.subject_options.url_prefix
+print("Subject codes retrieved successfully!")
+print("Number of unique subject codes:", university_subjects.get_num_subjects(), "\n")
 
-    for degree_code in os.listdir(f"./data/{uni}"):
-        degree_path = f"./data/{uni}/{degree_code}"
-        degree_subjects_path = f"{degree_path}/subjects"
+print(university_subjects)
 
-        os.makedirs(degree_subjects_path, exist_ok=True)
-        subject_codes = set(
-            [
-                name
-                for name in os.listdir(f"{degree_subjects_path}")
-                if os.path.isdir(os.path.join(f"{degree_subjects_path}", name))
-            ]
-        )
+exit()
+                
+# print("Scraping subject pages...")
 
-        with open(f"{degree_path}/{degree_code}.html", "r") as file:
-            html = file.read()
+# for university in tqdm(university_subjects.get_universities()):
+#     university_path = f"./data/{university}"
+    
+#     for subject_code in university_subjects.get_subjects(university):
+#         os.makedirs(f"{university_path}/subjects", exist_ok=True)
+        
+#         if not university_subjects.is_subject_in_university(university, subject_code):
+#             continue
+        
+#         subject_url = university_subjects.get_subjects(university)[subject_code]
+#         saveUrlAsHTML(subject_url, f"{university_path}/subjects/{subject_code}.html")
 
-        degree_soup = BeautifulSoup(html, "html.parser")
+# print("University subject html pages saved successfully!")
 
-        for subject_link in degree_soup.find_all("a"):
-            subject_url = subject_link.get("href")
+# print("Converting HTML to Markdown and Plain text...")
 
-            if subject_url is None:
-                continue
+# for (root, dirs, files) in tqdm(os.walk("./data")):
+#     if root.endswith("/subjects"):
+#         for file in files:
+#             if file.endswith(".html"):
+#                 filepath = os.path.join(root, file)
+#                 with open(filepath, "r") as file:
+#                     html = file.read()
 
-            subject_code = subject_url.split("/")[-1].replace(".html", "")
+#                 soup = BeautifulSoup(html, "html.parser")
+#                 markdown_text = html2text.html2text(html)
+#                 plain_text = strip_markdown.strip_markdown(markdown_text)
 
-            if subject_code in subject_codes or not subject_url.startswith(urlPrefix):
-                continue
+#                 with open(filepath.replace(".html", ".md"), "w") as file:
+#                     file.write(markdown_text)
 
-            if subject_code not in subject_codes:
-                os.makedirs(f"{degree_subjects_path}/{subject_code}", exist_ok=True)
-                saveUrlAsHTML(
-                    subject_url,
-                    f"{degree_subjects_path}/{subject_code}/{subject_code}.html",
-                )
-
-        break
-
-print("University subject html pages saved successfully!")
+#                 with open(filepath.replace(".html", ".txt"), "w") as file:
+#                     file.write(plain_text)
+                    
+# print("Conversion to Markdown and Plain text successful!")
