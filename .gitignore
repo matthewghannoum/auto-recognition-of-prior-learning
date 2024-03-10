@@ -7,6 +7,7 @@ prototyping/course_programs/*
 prototyping/subjects_cleaned/*
 prototyping/word2vec_embeddings/*
 prototyping/document_embeddings/*
+prototyping/test.ipynb
 
 # etl pipeline
 etl-pipeline/etl_pipeline_venv/
