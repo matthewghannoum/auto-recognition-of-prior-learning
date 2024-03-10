@@ -1,4 +1,5 @@
 import os
+import json
 
 from tqdm import tqdm
 from bs4 import BeautifulSoup
@@ -8,6 +9,10 @@ import strip_markdown
 from get_university_configs import get_university_configs
 from scrape_degree_pages import scrape_degree_pages
 from get_subject_codes import get_subject_codes
+from utils.await_user_confirmation import await_user_confirmation
+from web_scraping.save_url_as_html import save_url_as_html
+
+enable_stepping = False
 
 print("Loading university configurations...")
 
@@ -16,6 +21,9 @@ university_configs = get_university_configs()
 print("University configurations loaded successfully!")
 print("Number of universities:", len(university_configs), "\n")
 
+if enable_stepping:
+    await_user_confirmation()
+
 print("Scraping university degree pages...")
 
 num_pages_scraped = scrape_degree_pages(university_configs)
@@ -23,51 +31,84 @@ num_pages_scraped = scrape_degree_pages(university_configs)
 print("University degree pages saved successfully!")
 print("Number of NEW pages scraped:", num_pages_scraped, "\n")
 
+if enable_stepping:
+    await_user_confirmation()
+
 print("Getting set of subject codes...")
 
 university_subjects = get_subject_codes(university_configs)
 
+# save relationship between degrees, subjects and universities
+if not os.path.exists("./data/uni_degree_subjects_rels.json"):
+    with open("./data/uni_degree_subjects_rels.json", "w") as f:
+        json.dump(university_subjects.get_degree_to_subjects(), f, indent=2)
+else:
+    version_num = 2
+
+    while os.path.exists(f"./data/uni_degree_subjects_rels_v{version_num}.json"):
+        version_num += 1
+
+    with open(f"./data/uni_degree_subjects_rels_v{version_num}.json", "w") as f:
+        json.dump(university_subjects.get_degree_to_subjects(), f, indent=2)
+
 print("Subject codes retrieved successfully!")
 print("Number of unique subject codes:", university_subjects.get_num_subjects(), "\n")
 
-print(university_subjects)
+if enable_stepping:
+    await_user_confirmation()
 
-exit()
-                
-# print("Scraping subject pages...")
+print("Scraping subject pages...")
 
-# for university in tqdm(university_subjects.get_universities()):
-#     university_path = f"./data/{university}"
-    
-#     for subject_code in university_subjects.get_subjects(university):
-#         os.makedirs(f"{university_path}/subjects", exist_ok=True)
-        
-#         if not university_subjects.is_subject_in_university(university, subject_code):
-#             continue
-        
-#         subject_url = university_subjects.get_subjects(university)[subject_code]
-#         saveUrlAsHTML(subject_url, f"{university_path}/subjects/{subject_code}.html")
+num_subject_pages_scraped = 0
 
-# print("University subject html pages saved successfully!")
+for university in university_subjects.get_universities():
+    os.makedirs(f"./data/{university}/subjects/html", exist_ok=True)
 
-# print("Converting HTML to Markdown and Plain text...")
+    for subject_code in tqdm(
+        university_subjects.get_subjects(university), desc=university
+    ):
+        # existing subject codes are retrieved on each iteration to account for new subject codes
+        # saved in this process
+        existing_subject_codes = set(
+            [
+                x.replace(".html", "")
+                for x in os.listdir(f"./data/{university}/subjects/html")
+            ]
+        )
 
-# for (root, dirs, files) in tqdm(os.walk("./data")):
-#     if root.endswith("/subjects"):
-#         for file in files:
-#             if file.endswith(".html"):
-#                 filepath = os.path.join(root, file)
-#                 with open(filepath, "r") as file:
-#                     html = file.read()
+        if subject_code not in existing_subject_codes:
+            save_url_as_html(
+                f"{university_configs[university].subject_options.url_prefix}{subject_code}",
+                f"./data/{university}/subjects/html/{subject_code}.html",
+            )
+            num_subject_pages_scraped += 1
 
-#                 soup = BeautifulSoup(html, "html.parser")
-#                 markdown_text = html2text.html2text(html)
-#                 plain_text = strip_markdown.strip_markdown(markdown_text)
+print("Subject pages saved successfully!")
+print("Number of NEW subject pages scraped:", num_subject_pages_scraped, "\n")
 
-#                 with open(filepath.replace(".html", ".md"), "w") as file:
-#                     file.write(markdown_text)
+print("Converting HTML to Markdown and Plain Text...")
 
-#                 with open(filepath.replace(".html", ".txt"), "w") as file:
-#                     file.write(plain_text)
-                    
-# print("Conversion to Markdown and Plain text successful!")
+for university in university_subjects.get_universities():
+    os.makedirs(f"./data/{university}/subjects/markdown", exist_ok=True)
+    os.makedirs(f"./data/{university}/subjects/text", exist_ok=True)
+
+    for subject_page in tqdm(
+        os.listdir(f"./data/{university}/subjects/html"), desc=university
+    ):
+        with open(f"./data/{university}/subjects/html/{subject_page}", "r") as f:
+            markdown = html2text.html2text(f.read())
+            plain_text = strip_markdown.strip_markdown(markdown)
+
+            with open(
+                f"./data/{university}/subjects/markdown/{subject_page.replace('.html', '.md')}",
+                "w",
+            ) as f:
+                f.write(markdown)
+
+            with open(
+                f"./data/{university}/subjects/text/{subject_page.replace('.html', '.txt')}",
+                "w",
+            ) as f:
+                f.write(plain_text)
+
+print("HTML converted to Markdown and Plain Text successfully!")

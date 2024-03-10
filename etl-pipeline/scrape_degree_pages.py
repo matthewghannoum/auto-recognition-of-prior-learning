@@ -1,7 +1,7 @@
 import os
 
 from get_university_configs import UniversityConfig
-from web_scraping.saveUrlAsHTML import saveUrlAsHTML
+from web_scraping.save_url_as_html import save_url_as_html
 
 
 def scrape_degree_pages(university_configs: list[UniversityConfig]):
@@ -20,22 +20,21 @@ def scrape_degree_pages(university_configs: list[UniversityConfig]):
         if abbreviation not in uni_dirs:
             for degree_url in university_config.degree_urls:
                 degree_code = degree_url.split("/")[-1].replace(".html", "")
-                os.makedirs(f"{uni_path}/{degree_code}", exist_ok=True)
-                saveUrlAsHTML(
-                    degree_url, f"{uni_path}/{degree_code}/{degree_code}.html"
+                os.makedirs(f"{uni_path}/degrees", exist_ok=True)
+                save_url_as_html(
+                    degree_url, f"{uni_path}/degrees/{degree_code}.html"
                 )
                 num_pages_scraped += 1
 
             continue
 
         for degree_url in university_config.degree_urls:
-            degree_code = degree_url.split("/")[-1].replace(".html", "")
+            degree_page = degree_url.split("/")[-1]
 
-            if degree_code not in os.listdir(uni_path):
-                degree_code = degree_url.split("/")[-1].replace(".html", "")
-                os.makedirs(f"{uni_path}/{degree_code}", exist_ok=True)
-                saveUrlAsHTML(
-                    degree_url, f"{uni_path}/{degree_code}/{degree_code}.html"
+            if degree_page not in os.listdir(f"{uni_path}/degrees"):
+                os.makedirs(f"{uni_path}/degrees", exist_ok=True)
+                save_url_as_html(
+                    degree_url, f"{uni_path}/degrees/{degree_page}"
                 )
                 num_pages_scraped += 1
                 

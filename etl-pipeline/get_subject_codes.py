@@ -1,3 +1,4 @@
+import os
 from bs4 import BeautifulSoup
 
 from utils.get_top_level_dirs import get_top_level_dirs
@@ -25,10 +26,30 @@ class UniversitySubjects:
         self.subjects[university_name][subject_code].add(degree)
         
     def get_universities(self):
-        return self.subjects.keys()
+        return list(self.subjects.keys())
 
     def get_subjects(self, university_name: str):
-        return self.subjects[university_name]
+        return list(self.subjects[university_name].keys())
+    
+    def get_degree_to_subjects(self) -> list[tuple[str, dict[str, set[str]]]]:
+        uni_degree_subjects = []
+        
+        for university, subjects in self.subjects.items():
+            degree_to_subjects = {}
+            
+            for subject, degrees in subjects.items():
+                for degree in degrees:
+                    if degree not in degree_to_subjects:
+                        degree_to_subjects[degree] = set()
+                    
+                    degree_to_subjects[degree].add(subject)
+            
+            for degree, subjects in degree_to_subjects.items():
+                degree_to_subjects[degree] = list(subjects)
+                    
+            uni_degree_subjects.append((university, degree_to_subjects))
+        
+        return uni_degree_subjects
 
     def get_num_subjects(self):
         return sum([len(subjects) for subjects in self.subjects.values()])
@@ -49,8 +70,10 @@ def get_subject_codes(university_configs: list[UniversityConfig]):
         university_config = university_configs[uni]
         urlPrefix = university_config.subject_options.url_prefix
 
-        for degree_code in get_top_level_dirs(f"./data/{uni}"):
-            with open(f"./data/{uni}/{degree_code}/{degree_code}.html", "r") as file:
+        for degree_page in os.listdir(f"./data/{uni}/degrees"):
+            degree_code = degree_page.replace(".html", "")
+            
+            with open(f"./data/{uni}/degrees/{degree_code}.html", "r") as file:
                 html = file.read()
 
             degree_soup = BeautifulSoup(html, "html.parser")
