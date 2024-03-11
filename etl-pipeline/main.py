@@ -1,16 +1,12 @@
 import os
 import json
 
-from tqdm import tqdm
-from bs4 import BeautifulSoup
-import html2text
-import strip_markdown
-
+from utils.await_user_confirmation import await_user_confirmation
 from get_university_configs import get_university_configs
 from scrape_degree_pages import scrape_degree_pages
 from get_subject_codes import get_subject_codes
-from utils.await_user_confirmation import await_user_confirmation
-from web_scraping.save_url_as_html import save_url_as_html
+from scrape_subject_pages import scrape_subject_pages
+from convert_html_to_text import convert_html_to_text
 
 enable_stepping = False
 
@@ -59,56 +55,15 @@ if enable_stepping:
 
 print("Scraping subject pages...")
 
-num_subject_pages_scraped = 0
-
-for university in university_subjects.get_universities():
-    os.makedirs(f"./data/{university}/subjects/html", exist_ok=True)
-
-    for subject_code in tqdm(
-        university_subjects.get_subjects(university), desc=university
-    ):
-        # existing subject codes are retrieved on each iteration to account for new subject codes
-        # saved in this process
-        existing_subject_codes = set(
-            [
-                x.replace(".html", "")
-                for x in os.listdir(f"./data/{university}/subjects/html")
-            ]
-        )
-
-        if subject_code not in existing_subject_codes:
-            save_url_as_html(
-                f"{university_configs[university].subject_options.url_prefix}{subject_code}",
-                f"./data/{university}/subjects/html/{subject_code}.html",
-            )
-            num_subject_pages_scraped += 1
+num_subject_pages_scraped = scrape_subject_pages(
+    university_configs, university_subjects
+)
 
 print("Subject pages saved successfully!")
 print("Number of NEW subject pages scraped:", num_subject_pages_scraped, "\n")
 
 print("Converting HTML to Markdown and Plain Text...")
 
-for university in university_subjects.get_universities():
-    os.makedirs(f"./data/{university}/subjects/markdown", exist_ok=True)
-    os.makedirs(f"./data/{university}/subjects/text", exist_ok=True)
-
-    for subject_page in tqdm(
-        os.listdir(f"./data/{university}/subjects/html"), desc=university
-    ):
-        with open(f"./data/{university}/subjects/html/{subject_page}", "r") as f:
-            markdown = html2text.html2text(f.read())
-            plain_text = strip_markdown.strip_markdown(markdown)
-
-            with open(
-                f"./data/{university}/subjects/markdown/{subject_page.replace('.html', '.md')}",
-                "w",
-            ) as f:
-                f.write(markdown)
-
-            with open(
-                f"./data/{university}/subjects/text/{subject_page.replace('.html', '.txt')}",
-                "w",
-            ) as f:
-                f.write(plain_text)
+convert_html_to_text(university_subjects)
 
 print("HTML converted to Markdown and Plain Text successfully!")
