@@ -7,14 +7,14 @@ from sentence_transformers import SentenceTransformer
 from get_university_configs import EmbeddingModelType
 from utils.get_top_level_dirs import get_top_level_dirs
 
-sbert_model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
-
 
 def generate_embeddings(model: EmbeddingModelType):
     print(f"Generating {model} embeddings...")
 
     if model == "sbert":
         print("Using Sentence-BERT model...")
+        
+        sbert_model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
 
         for uni_dir in get_top_level_dirs("./data"):
             uni_subjects_dir = f"./data/{uni_dir}"
