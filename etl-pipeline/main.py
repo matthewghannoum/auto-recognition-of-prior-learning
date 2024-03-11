@@ -10,6 +10,7 @@ from get_subject_codes import get_subject_codes
 from scrape_subject_pages import scrape_subject_pages
 from convert_html_to_text import convert_html_to_text
 from generate_embeddings import generate_embeddings
+from import_into_weaviate import import_into_weaviate
 
 load_dotenv()
 
@@ -75,6 +76,14 @@ print("Converting HTML to Markdown and Plain Text...")
 
 convert_html_to_text(university_subjects, university_configs)
 
-print("HTML converted to Markdown and Plain Text successfully!")
+print("HTML converted to Markdown and Plain Text successfully!", "\n")
 
 generate_embeddings("sbert")
+
+print("")
+
+print("Import embeddings into Weaviate...")
+
+import_into_weaviate()
+
+print("Embeddings imported into Weaviate successfully!")
