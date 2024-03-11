@@ -73,7 +73,7 @@ print("Number of NEW subject pages scraped:", num_subject_pages_scraped, "\n")
 
 print("Converting HTML to Markdown and Plain Text...")
 
-convert_html_to_text(university_subjects)
+convert_html_to_text(university_subjects, university_configs)
 
 print("HTML converted to Markdown and Plain Text successfully!")
 
