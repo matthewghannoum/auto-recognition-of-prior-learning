@@ -1,0 +1,20 @@
+# UTS Computer Science
+
+university:
+  name: University of Sydney
+  abbreviation: usyd
+  degreeUrls:
+    - "https://www.sydney.edu.au/handbooks/engineering/advanced_computing/advanced_computing_table.html"
+    # - "https://www.sydney.edu.au/handbooks/engineering/engineering_honours/mechanical/table.html"
+    # - "https://www.sydney.edu.au/handbooks/engineering/engineering_honours/civil/table.html"
+    # - "https://www.sydney.edu.au/handbooks/business_school/subject_areas/commerce_degree_core/commerce_degree_core_table.html"
+    # - "https://www.sydney.edu.au/handbooks/business_school/subject_areas/finance/finance_table.html"
+  subjectOptions:
+    urlPrefix: "https://www.sydney.edu.au/units/"
+    startLine:
+      value: "# "
+      matchType: startsWith
+    endLine:
+      value: "Leadership for good starts here"
+      matchType: equals
+  embeddingMethod: sbert
