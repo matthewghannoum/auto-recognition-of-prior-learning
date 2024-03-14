@@ -53,6 +53,21 @@ class UniversitySubjects:
 
     def get_num_subjects(self):
         return sum([len(subjects) for subjects in self.subjects.values()])
+    
+    def get_num_subjects_per_degree(self):
+        num_subject_per_degree = {}
+        
+        for university in self.subjects:
+            num_subject_per_degree[university] = {}
+            
+            for _, degrees in self.subjects[university].items():
+                for degree in degrees:
+                    if degree not in num_subject_per_degree[university]:
+                        num_subject_per_degree[university][degree] = 0
+                    
+                    num_subject_per_degree[university][degree] += 1
+                    
+        return num_subject_per_degree
 
     def is_subject_in_university(self, university_name: str, subject_code: str):
         return subject_code in self.subjects[university_name]
