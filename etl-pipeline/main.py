@@ -58,6 +58,19 @@ else:
         json.dump(university_subjects.get_degree_to_subjects(), f, indent=2)
 
 print("Subject codes retrieved successfully!")
+
+num_subjects_per_degree_per_uni = university_subjects.get_num_subjects_per_degree()
+
+for university in university_subjects.get_universities():
+    print(
+        f"Number of unique subject codes for {university.upper()}:",
+        len(university_subjects.get_subjects(university)),
+    )
+    num_subjects_per_degree = num_subjects_per_degree_per_uni[university]
+    
+    for degree, num_subjects in num_subjects_per_degree.items():
+        print(f"    Number of unique subject codes for {degree}:", num_subjects)
+
 print("Number of unique subject codes:", university_subjects.get_num_subjects(), "\n")
 
 if is_enable_stepping:
