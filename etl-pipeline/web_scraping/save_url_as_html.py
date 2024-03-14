@@ -1,6 +1,16 @@
 import requests
 
-def save_url_as_html(url, filepath):
+
+def get_url_as_html(url):
     response = requests.get(url)
+    return response.text
+
+
+def save_html(html, filepath):
     with open(filepath, "w") as file:
-        file.write(response.text)
+        file.write(html)
+
+
+def save_url_as_html(url, filepath):
+    html = get_url_as_html(url)
+    save_html(html, filepath)
