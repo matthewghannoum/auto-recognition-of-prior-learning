@@ -4,6 +4,7 @@
 
 # Prototyping file outputs
 prototyping/course_programs/*
+prototyping/usyd/course_programs/*
 prototyping/subjects_cleaned/*
 prototyping/word2vec_embeddings/*
 prototyping/document_embeddings/*
