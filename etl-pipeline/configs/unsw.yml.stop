@@ -1,0 +1,18 @@
+# UTS Computer Science
+
+university:
+  name: University of New South Wales
+  abbreviation: unsw
+  degreeUrls:
+    - "https://www.handbook.unsw.edu.au/undergraduate/specialisations/2024/COMPI1"
+    - "https://www.handbook.unsw.edu.au/undergraduate/specialisations/2024/COMPJ1"
+    - "https://handbook.uts.edu.au/courses/c09004.html"
+  subjectOptions:
+    urlPrefix: "https://handbook.uts.edu.au/subjects/"
+    startLine:
+      value: "# "
+      matchType: startsWith
+    endLine:
+      value: "[UTS: Handbook 2024](https://www.handbook.uts.edu.au/index.html)"
+      matchType: equals
+  embeddingMethod: sbert
