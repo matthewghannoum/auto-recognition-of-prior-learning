@@ -1,5 +1,6 @@
 import os
 import json
+import argparse
 
 from dotenv import load_dotenv
 
@@ -19,6 +20,19 @@ is_enable_stepping = (
     if os.getenv("IS_ENABLE_STEPPING") is not None
     else False
 )
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--enable-stepping", action="store_true", help="require your input for each etl process")
+parser.add_argument("--only-generate-embeddings", action="store_true", help="only generate embeddings")
+
+args = parser.parse_args()
+
+if args.enable_stepping:
+    is_enable_stepping = True
+    
+if args.only_generate_embeddings:
+    generate_embeddings("sbert")
+    exit(1)
 
 print("Loading university configurations...")
 
