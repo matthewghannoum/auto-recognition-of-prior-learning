@@ -9,6 +9,10 @@ prototyping/word2vec_embeddings/*
 prototyping/document_embeddings/*
 prototyping/test.ipynb
 
+# data
+*.csv
+*.json
+
 # etl pipeline
 etl-pipeline/etl_pipeline_venv/
 etl-pipeline/data/
