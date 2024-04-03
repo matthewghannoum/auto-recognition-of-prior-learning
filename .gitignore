@@ -2,17 +2,12 @@
 # Project Specific
 # ---
 
-# Prototyping file outputs
-prototyping/course_programs/*
-prototyping/usyd/course_programs/*
-prototyping/subjects_cleaned/*
-prototyping/word2vec_embeddings/*
-prototyping/document_embeddings/*
-prototyping/test.ipynb
-
 # data
 *.csv
 *.json
+
+# Prototyping file outputs
+prototyping/usyd/course_programs/*
 
 # etl pipeline
 etl-pipeline/etl_pipeline_venv/
@@ -24,6 +19,12 @@ nlp_server_venv/
 
 # application data
 db/
+
+# Deprecated Prototyping file outputs
+deprecated/prototyping/course_programs/*
+deprecated/prototyping/subjects_cleaned/*
+deprecated/prototyping/word2vec_old/word2vec_embeddings/*
+deprecated/prototyping/document_embeddings/*
 
 # ---
 # Python Boilerplate
