@@ -1,18 +1,59 @@
 import os
 import json
 
+import numpy as np
 from tqdm import tqdm
 from sentence_transformers import SentenceTransformer
 from InstructorEmbedding import INSTRUCTOR
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
+import gensim.downloader as gensim_api
 
 from typing import Literal
 from utils.get_top_level_dirs import get_top_level_dirs
 
-EmbeddingModelNameType = Literal["sbert", "instructor", "word2vec", "doc2vec"]
+EmbeddingModelNameType = Literal["sbert", "instructor", "word2vec", "doc2vec", "glove"]
+
+
+class Glove:
+    def __init__(self, aggregation="mean"):
+        self.size = 50
+        self.aggregation = aggregation
+        print("Loading Glove model...")
+        self.vectors = gensim_api.load("glove-wiki-gigaword-50")
+        print("Glove model loaded successfully!")
+
+    def encode(self, text: list[str], normalize_embeddings=True):
+        """
+        Embedding normalization is not currently implemented.
+        """
+        text = text[0]
+
+        vec = np.zeros(self.size).reshape(
+            (1, self.size)
+        )  # create for size of glove embedding and assign all values 0
+        count = 0
+        for word in text.split():
+            # print("\n word:   ", word)
+            try:
+                # print("golve vect", self.vectors[word])
+                vec += self.vectors[word].reshape(
+                    (1, self.size)
+                )  # update vector with new word
+                count += 1  # counts every word in sentence
+            except KeyError:
+                continue
+        if self.aggregation == "mean":
+            if count != 0:
+                vec /= count  # get average of vector to create embedding for sentence
+            return vec
+        elif self.aggregation == "sum":
+            return vec
 
 
 def generate_doc2vec_embeddings():
+    """
+    Currently doc2vec is the only model which requires training on all data before generating embeddings.
+    """
     for uni_dir in get_top_level_dirs("./data"):
         uni_subjects_dir = f"./data/{uni_dir}"
         embeddings_dir = f"{uni_subjects_dir}/subjects/embeddings/doc2vec"
@@ -33,7 +74,7 @@ def generate_doc2vec_embeddings():
 
         documents = []
 
-        for document_name in document_names:
+        for document_name in tqdm(document_names, desc="tagging documents"):
             with open(
                 f"{uni_subjects_dir}/subjects/text/{document_name}.txt", "r"
             ) as f:
@@ -52,9 +93,10 @@ def generate_doc2vec_embeddings():
         model.build_vocab(documents)
 
         # Train the model
+        print("Training the model...")
         model.train(documents, total_examples=model.corpus_count, epochs=model.epochs)
-        
-        for document_name in document_names:
+
+        for document_name in tqdm(document_names, desc="generating embeddings"):
             embedding = model.dv[document_name].tolist()
 
             with open(
@@ -64,7 +106,9 @@ def generate_doc2vec_embeddings():
                 json.dump(embedding, f)
 
 
-def generate_transformer_embeddings(model, modelType: Literal["sbert", "instructor"]):
+def generate_embedding_per_document(
+    model, modelType: Literal["sbert", "instructor", "glove"]
+):
     for uni_dir in get_top_level_dirs("./data"):
         uni_subjects_dir = f"./data/{uni_dir}"
         embeddings_dir = f"{uni_subjects_dir}/subjects/embeddings/{modelType}"
@@ -106,12 +150,15 @@ def generate_embeddings(modelTypes: list[EmbeddingModelNameType]):
 
         if modelType == "sbert":
             model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
-            generate_transformer_embeddings(model, modelType)
+            generate_embedding_per_document(model, modelType)
         elif modelType == "instructor":
             model = INSTRUCTOR("hkunlp/instructor-xl")
-            generate_transformer_embeddings(model, modelType)
+            generate_embedding_per_document(model, modelType)
         elif modelType == "doc2vec":
             generate_doc2vec_embeddings()
+        elif modelType == "glove":
+            model = Glove(aggregation="mean")
+            generate_embedding_per_document(model, modelType)
         else:
             print("Invalid model type. Skipping this model type.")
             continue
