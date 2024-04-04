@@ -25,6 +25,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--enable-stepping", action="store_true", help="require your input for each etl process")
 parser.add_argument("--only-generate-embeddings", action="store_true", help="only generate embeddings")
 parser.add_argument("--model-type", type=str, help="model type to generate embeddings for", action="append")
+parser.add_argument("--only-weaviate-import", action="store_true", help="import embeddings into weaviate")
 
 args = parser.parse_args()
 
@@ -33,12 +34,16 @@ if args.enable_stepping:
     
 selected_model_embedding_types = ["sbert"]
 
-if selected_model_embedding_types:
+if args.model_type:
     selected_model_embedding_types += args.model_type
     selected_model_embedding_types = list(set(selected_model_embedding_types))
     
 if args.only_generate_embeddings:
     generate_embeddings(selected_model_embedding_types)
+    exit(1)
+    
+if args.only_weaviate_import:
+    import_into_weaviate()
     exit(1)
 
 print("Loading university configurations...")
