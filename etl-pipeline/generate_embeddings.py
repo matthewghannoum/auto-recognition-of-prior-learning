@@ -3,10 +3,12 @@ import json
 
 import numpy as np
 from tqdm import tqdm
-from sentence_transformers import SentenceTransformer
-from InstructorEmbedding import INSTRUCTOR
+
+from nltk.tokenize import word_tokenize
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 import gensim.downloader as gensim_api
+from sentence_transformers import SentenceTransformer
+from InstructorEmbedding import INSTRUCTOR
 
 from typing import Literal
 from utils.get_top_level_dirs import get_top_level_dirs
@@ -71,6 +73,10 @@ def generate_doc2vec_embeddings():
             )
             - existing_embeddings
         )
+        
+        if len(document_names) == 0:
+            print(f"All doc2vec embeddings for {uni_dir} already exist. Skipping...")
+            continue
 
         documents = []
 
@@ -78,7 +84,8 @@ def generate_doc2vec_embeddings():
             with open(
                 f"{uni_subjects_dir}/subjects/text/{document_name}.txt", "r"
             ) as f:
-                documents.append(TaggedDocument(f.read().split(), [document_name]))
+                document = f.read().lower()
+                documents.append(TaggedDocument(word_tokenize(document), [document_name]))
 
         # Initialize the Doc2Vec model
         model = Doc2Vec(
