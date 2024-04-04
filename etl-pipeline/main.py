@@ -32,11 +32,10 @@ args = parser.parse_args()
 if args.enable_stepping:
     is_enable_stepping = True
     
-selected_model_embedding_types = ["sbert"]
+selected_model_embedding_types = args.model_type
 
-if args.model_type:
-    selected_model_embedding_types += args.model_type
-    selected_model_embedding_types = list(set(selected_model_embedding_types))
+if selected_model_embedding_types is None or len(selected_model_embedding_types) == 0:
+    selected_model_embedding_types = ["sbert"]
     
 if args.only_generate_embeddings:
     generate_embeddings(selected_model_embedding_types)
