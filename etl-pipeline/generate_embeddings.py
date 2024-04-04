@@ -3,22 +3,31 @@ import json
 
 from tqdm import tqdm
 from sentence_transformers import SentenceTransformer
+from InstructorEmbedding import INSTRUCTOR
 
-from get_university_configs import EmbeddingModelType
+from typing import Literal
 from utils.get_top_level_dirs import get_top_level_dirs
 
+EmbeddingModelNameType = Literal["sbert", "instructor", "word2vec"]
 
-def generate_embeddings(model: EmbeddingModelType):
-    print(f"Generating {model} embeddings...")
 
-    if model == "sbert":
-        print("Using Sentence-BERT model...")
-        
-        sbert_model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
+def generate_embeddings(modelTypes: list[EmbeddingModelNameType]):
+    for modelType in set(modelTypes):
+        print(f"Generating {modelType} embeddings...")
+
+        model = None
+
+        if modelType == "sbert":
+            model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
+        elif modelType == "instructor":
+            model = INSTRUCTOR("hkunlp/instructor-xl")
+        else:
+            print("Invalid model type. Skipping this model type.")
+            continue
 
         for uni_dir in get_top_level_dirs("./data"):
             uni_subjects_dir = f"./data/{uni_dir}"
-            embeddings_dir = f"{uni_subjects_dir}/subjects/embeddings/sbert"
+            embeddings_dir = f"{uni_subjects_dir}/subjects/embeddings/{modelType}"
             os.makedirs(embeddings_dir, exist_ok=True)
 
             existing_embeddings = set(os.listdir(embeddings_dir))
@@ -33,23 +42,17 @@ def generate_embeddings(model: EmbeddingModelType):
                     os.getenv("IS_REGENERATE_EMBEDDINGS").lower() == "true"
                     or subject_embedding_filename not in existing_embeddings
                 ):
-                    # read subject text file
                     with open(
                         f"{uni_subjects_dir}/subjects/text/{subject_text_filename}", "r"
                     ) as f:
                         subject_text = f.read()
 
-                    embedding = sbert_model.encode([subject_text], normalize_embeddings=True)
+                    embedding = model.encode([subject_text], normalize_embeddings=True).tolist()[0]
 
                     with open(
                         f"{embeddings_dir}/{subject_embedding_filename}",
                         "w",
                     ) as f:
-                        json.dump(embedding.tolist()[0], f)
+                        json.dump(embedding, f)
 
-        print("SBERT Embeddings generated successfully!")
-    elif model == "word2vec":
-        print("Using Word2Vec model...")
-        print("Word2Vec model not implemented yet!")
-    else:
-        print("Invalid model type!")
+        print(f"{modelType} embeddings generated successfully!")

@@ -4,8 +4,9 @@ from typing import Literal
 
 import yaml
 
+from generate_embeddings import EmbeddingModelNameType
+
 MatchType = Literal["equals", "contains", "startsWith", "endsWith"]
-EmbeddingModelType = Literal["sbert", "word2vec"]
 
 
 @dataclass
@@ -21,7 +22,7 @@ class UniversityConfig:
     abbreviation: str
     degree_urls: list[str]
     subject_options: SubjectOptions
-    embedding_method: EmbeddingModelType
+    embedding_method: EmbeddingModelNameType
 
 
 def get_university_configs():
