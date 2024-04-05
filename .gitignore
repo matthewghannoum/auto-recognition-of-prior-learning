@@ -8,6 +8,7 @@
 
 # Prototyping file outputs
 prototyping/usyd/course_programs/*
+prototyping/query_weaviate.ipynb
 
 # etl pipeline
 etl-pipeline/etl_pipeline_venv/
