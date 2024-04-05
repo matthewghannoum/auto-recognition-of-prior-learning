@@ -37,6 +37,11 @@ selected_model_embedding_types = args.model_type
 if selected_model_embedding_types is None or len(selected_model_embedding_types) == 0:
     selected_model_embedding_types = ["sbert"]
     
+if selected_model_embedding_types[0] == "all":
+    selected_model_embedding_types = ["sbert", "instructor", "doc2vec", "glove"]
+    generate_embeddings(selected_model_embedding_types)
+    exit(1)
+    
 if args.only_generate_embeddings:
     generate_embeddings(selected_model_embedding_types)
     exit(1)

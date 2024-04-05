@@ -4,7 +4,6 @@ import json
 import numpy as np
 from tqdm import tqdm
 
-from nltk.tokenize import word_tokenize
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 from gensim.models import KeyedVectors
 from gensim.scripts.glove2word2vec import glove2word2vec
@@ -94,7 +93,7 @@ def generate_doc2vec_embeddings():
             ) as f:
                 document = f.read().lower()
                 documents.append(
-                    TaggedDocument(word_tokenize(document), [document_name])
+                    TaggedDocument(document, [document_name])
                 )
 
         # Initialize the Doc2Vec model
