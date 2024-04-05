@@ -6,7 +6,8 @@ from tqdm import tqdm
 
 from nltk.tokenize import word_tokenize
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
-import gensim.downloader as gensim_api
+from gensim.models import KeyedVectors
+from gensim.scripts.glove2word2vec import glove2word2vec
 from sentence_transformers import SentenceTransformer
 from InstructorEmbedding import INSTRUCTOR
 
@@ -17,11 +18,18 @@ EmbeddingModelNameType = Literal["sbert", "instructor", "word2vec", "doc2vec", "
 
 
 class Glove:
-    def __init__(self, aggregation="mean"):
-        self.size = 50
+    def __init__(self, size=Literal[50, 100, 200, 300], aggregation="mean"):
+        self.size = size
         self.aggregation = aggregation
+
         print("Loading Glove model...")
-        self.vectors = gensim_api.load("glove-wiki-gigaword-50")
+
+        self.vectors = KeyedVectors.load_word2vec_format(
+            f"./model_data/glove_6b_vectors/glove.6B.{size}d.txt",
+            binary=False,
+            no_header=True,
+        )
+
         print("Glove model loaded successfully!")
 
     def encode(self, text: list[str], normalize_embeddings=True):
@@ -73,7 +81,7 @@ def generate_doc2vec_embeddings():
             )
             - existing_embeddings
         )
-        
+
         if len(document_names) == 0:
             print(f"All doc2vec embeddings for {uni_dir} already exist. Skipping...")
             continue
@@ -85,12 +93,14 @@ def generate_doc2vec_embeddings():
                 f"{uni_subjects_dir}/subjects/text/{document_name}.txt", "r"
             ) as f:
                 document = f.read().lower()
-                documents.append(TaggedDocument(word_tokenize(document), [document_name]))
+                documents.append(
+                    TaggedDocument(word_tokenize(document), [document_name])
+                )
 
         # Initialize the Doc2Vec model
         model = Doc2Vec(
-            vector_size=50,  # Dimensionality of the document vectors
-            window=2,  # Maximum distance between the current and predicted word within a sentence
+            vector_size=384,  # Dimensionality of the document vectors
+            window=9,  # Maximum distance between the current and predicted word within a sentence
             min_count=1,  # Ignores all words with total frequency lower than this
             workers=4,  # Number of CPU cores to use for training
             epochs=20,
@@ -164,7 +174,7 @@ def generate_embeddings(modelTypes: list[EmbeddingModelNameType]):
         elif modelType == "doc2vec":
             generate_doc2vec_embeddings()
         elif modelType == "glove":
-            model = Glove(aggregation="mean")
+            model = Glove(300, aggregation="mean")
             generate_embedding_per_document(model, modelType)
         else:
             print("Invalid model type. Skipping this model type.")
