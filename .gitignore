@@ -17,6 +17,9 @@ etl-pipeline/model_data/glove_6b_vectors/*
 !etl-pipeline/model_data/glove_6b_vectors/.gitkeep
 etl-pipeline/etl_pipeline_venv/
 
+# evaluation
+evaluation/data/
+
 # nlp server
 nlp_server_venv/
 
