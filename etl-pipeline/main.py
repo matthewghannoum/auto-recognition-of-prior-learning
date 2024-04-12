@@ -15,23 +15,18 @@ from import_into_weaviate import import_into_weaviate
 
 load_dotenv()
 
-is_enable_stepping = (
-    os.getenv("IS_ENABLE_STEPPING").lower() == "true"
-    if os.getenv("IS_ENABLE_STEPPING") is not None
-    else False
-)
-
 parser = argparse.ArgumentParser()
-parser.add_argument("--enable-stepping", action="store_true", help="require your input for each etl process")
+parser.add_argument("--disable-stepping", action="store_true", help="do not require your input for each etl process")
 parser.add_argument("--only-generate-embeddings", action="store_true", help="only generate embeddings")
+parser.add_argument("--regenerate_existing_embeddings", action="store_true", help="regenerate existing embeddings")
 parser.add_argument("--model-type", type=str, help="model type to generate embeddings for", action="append")
 parser.add_argument("--only-weaviate-import", action="store_true", help="import embeddings into weaviate")
 
 args = parser.parse_args()
 
-if args.enable_stepping:
-    is_enable_stepping = True
-    
+is_enable_stepping = not args.disable_stepping
+is_regenerate_embeddings = args.regenerate_existing_embeddings
+
 selected_model_embedding_types = args.model_type
 
 if selected_model_embedding_types is None or len(selected_model_embedding_types) == 0:
@@ -39,11 +34,11 @@ if selected_model_embedding_types is None or len(selected_model_embedding_types)
     
 if selected_model_embedding_types[0] == "all":
     selected_model_embedding_types = ["sbert", "instructor", "doc2vec", "glove"]
-    generate_embeddings(selected_model_embedding_types)
+    generate_embeddings(selected_model_embedding_types, is_regenerate_embeddings)
     exit(1)
     
 if args.only_generate_embeddings:
-    generate_embeddings(selected_model_embedding_types)
+    generate_embeddings(selected_model_embedding_types, is_regenerate_embeddings)
     exit(1)
     
 if args.only_weaviate_import:
@@ -121,7 +116,7 @@ convert_html_to_text(university_subjects, university_configs)
 
 print("HTML converted to Markdown and Plain Text successfully!", "\n")
 
-generate_embeddings(selected_model_embedding_types)
+generate_embeddings(selected_model_embedding_types, is_regenerate_embeddings)
 
 print("")
 

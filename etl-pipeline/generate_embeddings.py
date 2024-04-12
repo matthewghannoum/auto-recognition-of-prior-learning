@@ -13,7 +13,9 @@ from InstructorEmbedding import INSTRUCTOR
 from typing import Literal
 from utils.get_top_level_dirs import get_top_level_dirs
 
-EmbeddingModelNameType = Literal["sbert", "instructor", "mxbai", "sfr-mistral", "word2vec", "doc2vec", "glove"]
+EmbeddingModelNameType = Literal[
+    "sbert", "instructor", "mxbai", "sfr-mistral", "word2vec", "doc2vec", "glove"
+]
 
 
 class Glove:
@@ -59,7 +61,7 @@ class Glove:
             return vec
 
 
-def generate_doc2vec_embeddings():
+def generate_doc2vec_embeddings(is_regenerate_embeddings: bool):
     """
     Currently doc2vec is the only model which requires training on all data before generating embeddings.
     """
@@ -92,9 +94,7 @@ def generate_doc2vec_embeddings():
                 f"{uni_subjects_dir}/subjects/text/{document_name}.txt", "r"
             ) as f:
                 document = f.read().lower()
-                documents.append(
-                    TaggedDocument(document, [document_name])
-                )
+                documents.append(TaggedDocument(document, [document_name]))
 
         # Initialize the Doc2Vec model
         model = Doc2Vec(
@@ -113,17 +113,20 @@ def generate_doc2vec_embeddings():
         model.train(documents, total_examples=model.corpus_count, epochs=model.epochs)
 
         for document_name in tqdm(document_names, desc="generating embeddings"):
-            embedding = model.dv[document_name].tolist()
+            if is_regenerate_embeddings or document_name not in existing_embeddings:
+                embedding = model.dv[document_name].tolist()
 
-            with open(
-                f"{embeddings_dir}/{document_name}.json",
-                "w",
-            ) as f:
-                json.dump(embedding, f)
+                with open(
+                    f"{embeddings_dir}/{document_name}.json",
+                    "w",
+                ) as f:
+                    json.dump(embedding, f)
 
 
 def generate_embedding_per_document(
-    model, modelType: Literal["sbert", "instructor", "glove"]
+    model,
+    modelType: Literal["sbert", "instructor", "glove"],
+    is_regenerate_embeddings: bool,
 ):
     for uni_dir in get_top_level_dirs("./data"):
         uni_subjects_dir = f"./data/{uni_dir}"
@@ -139,7 +142,7 @@ def generate_embedding_per_document(
             subject_embedding_filename = f"{subject_code}.json"
 
             if (
-                os.getenv("IS_REGENERATE_EMBEDDINGS").lower() == "true"
+                is_regenerate_embeddings
                 or subject_embedding_filename not in existing_embeddings
             ):
                 with open(
@@ -158,7 +161,9 @@ def generate_embedding_per_document(
                     json.dump(embedding, f)
 
 
-def generate_embeddings(modelTypes: list[EmbeddingModelNameType]):
+def generate_embeddings(
+    modelTypes: list[EmbeddingModelNameType], is_regenerate_embeddings: bool = True
+):
     for modelType in set(modelTypes):
         print(f"Generating {modelType} embeddings...")
 
@@ -166,21 +171,21 @@ def generate_embeddings(modelTypes: list[EmbeddingModelNameType]):
 
         if modelType == "sbert":
             model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
-            generate_embedding_per_document(model, modelType)
+            generate_embedding_per_document(model, modelType, is_regenerate_embeddings)
         elif modelType == "mxbai":
             model = SentenceTransformer("mixedbread-ai/mxbai-embed-large-v1")
-            generate_embedding_per_document(model, modelType)
+            generate_embedding_per_document(model, modelType, is_regenerate_embeddings)
         elif modelType == "sfr-mistral":
             model = SentenceTransformer("Salesforce/SFR-Embedding-Mistral")
-            generate_embedding_per_document(model, modelType)
+            generate_embedding_per_document(model, modelType, is_regenerate_embeddings)
         elif modelType == "instructor":
             model = INSTRUCTOR("hkunlp/instructor-xl")
-            generate_embedding_per_document(model, modelType)
+            generate_embedding_per_document(model, modelType, is_regenerate_embeddings)
         elif modelType == "doc2vec":
-            generate_doc2vec_embeddings()
+            generate_doc2vec_embeddings(is_regenerate_embeddings)
         elif modelType == "glove":
             model = Glove(300, aggregation="mean")
-            generate_embedding_per_document(model, modelType)
+            generate_embedding_per_document(model, modelType, is_regenerate_embeddings)
         else:
             print("Invalid model type. Skipping this model type.")
             continue
