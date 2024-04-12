@@ -3,16 +3,16 @@
 university:
   name: University of Technology Sydney
   abbreviation: uts
-  degreeUrls:
+  degree_urls:
     - "https://www.handbook.uts.edu.au/courses/c09119.html"
     - "https://handbook.uts.edu.au/courses/c09066.html"
     - "https://handbook.uts.edu.au/courses/c09004.html"
-  subjectOptions:
-    urlPrefix: "https://handbook.uts.edu.au/subjects/"
-    startLine:
+  subject_options:
+    url_prefix: "https://handbook.uts.edu.au/subjects/"
+    start_line:
       value: "# "
       matchType: startsWith
-    endLine:
+    end_line:
       value: "[UTS: Handbook 2024](https://www.handbook.uts.edu.au/index.html)"
-      matchType: equals
-  embeddingMethod: sbert
+      match_type: equals
+  embedding_method: sbert

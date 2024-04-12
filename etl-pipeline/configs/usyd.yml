@@ -3,18 +3,18 @@
 university:
   name: University of Sydney
   abbreviation: usyd
-  degreeUrls:
+  degree_urls:
     - "https://www.sydney.edu.au/handbooks/engineering/advanced_computing/advanced_computing_table.html"
     # - "https://www.sydney.edu.au/handbooks/engineering/engineering_honours/mechanical/table.html"
     # - "https://www.sydney.edu.au/handbooks/engineering/engineering_honours/civil/table.html"
     # - "https://www.sydney.edu.au/handbooks/business_school/subject_areas/commerce_degree_core/commerce_degree_core_table.html"
     # - "https://www.sydney.edu.au/handbooks/business_school/subject_areas/finance/finance_table.html"
-  subjectOptions:
-    urlPrefix: "https://www.sydney.edu.au/units/"
-    startLine:
+  subject_options:
+    url_prefix: "https://www.sydney.edu.au/units/"
+    start_line:
       value: "# "
-      matchType: startsWith
+      match_type: startsWith
     endLine:
       value: "Leadership for good starts here"
-      matchType: equals
-  embeddingMethod: sbert
+      match_type: equals
+  embedding_method: sbert

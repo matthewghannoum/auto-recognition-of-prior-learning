@@ -6,14 +6,14 @@ import yaml
 
 from generate_embeddings import EmbeddingModelNameType
 
-MatchType = Literal["equals", "contains", "startsWith", "endsWith"]
+match_type = Literal["equals", "contains", "startsWith", "endsWith"]
 
 
 @dataclass
 class SubjectOptions:
     url_prefix: str
-    start_line: tuple[str, MatchType]
-    end_line: tuple[str, MatchType]
+    start_line: tuple[str, match_type]
+    end_line: tuple[str, match_type]
 
 
 @dataclass
@@ -33,16 +33,16 @@ def get_university_configs():
             with open(f"./configs/{filename}", "r") as file:
                 university_config = yaml.safe_load(file)["university"]
 
-                subjectOptions = university_config["subjectOptions"]
+                subjectOptions = university_config["subject_options"]
                 subjectOptions = SubjectOptions(
-                    subjectOptions["urlPrefix"],
+                    subjectOptions["url_prefix"],
                     (
-                        subjectOptions["startLine"]["value"],
-                        subjectOptions["startLine"]["matchType"],
+                        subjectOptions["start_line"]["value"],
+                        subjectOptions["start_line"]["match_type"],
                     ),
                     (
-                        subjectOptions["endLine"]["value"],
-                        subjectOptions["endLine"]["matchType"],
+                        subjectOptions["end_line"]["value"],
+                        subjectOptions["end_line"]["match_type"],
                     ),
                 )
 
@@ -50,9 +50,9 @@ def get_university_configs():
                     UniversityConfig(
                         university_config["name"],
                         university_config["abbreviation"],
-                        university_config["degreeUrls"],
+                        university_config["degree_urls"],
                         subjectOptions,
-                        university_config["embeddingMethod"],
+                        university_config["embedding_method"],
                     )
                 )
 
