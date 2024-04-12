@@ -13,7 +13,7 @@ from InstructorEmbedding import INSTRUCTOR
 from typing import Literal
 from utils.get_top_level_dirs import get_top_level_dirs
 
-EmbeddingModelNameType = Literal["sbert", "instructor", "word2vec", "doc2vec", "glove"]
+EmbeddingModelNameType = Literal["sbert", "instructor", "mxbai", "sfr-mistral", "word2vec", "doc2vec", "glove"]
 
 
 class Glove:
@@ -166,6 +166,12 @@ def generate_embeddings(modelTypes: list[EmbeddingModelNameType]):
 
         if modelType == "sbert":
             model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
+            generate_embedding_per_document(model, modelType)
+        elif modelType == "mxbai":
+            model = SentenceTransformer("mixedbread-ai/mxbai-embed-large-v1")
+            generate_embedding_per_document(model, modelType)
+        elif modelType == "sfr-mistral":
+            model = SentenceTransformer("Salesforce/SFR-Embedding-Mistral")
             generate_embedding_per_document(model, modelType)
         elif modelType == "instructor":
             model = INSTRUCTOR("hkunlp/instructor-xl")
