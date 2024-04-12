@@ -1,20 +1,43 @@
-# UTS Computer Science
-
 university:
   name: University of Sydney
   abbreviation: usyd
-  degree_urls:
-    - "https://www.sydney.edu.au/handbooks/engineering/advanced_computing/advanced_computing_table.html"
-    # - "https://www.sydney.edu.au/handbooks/engineering/engineering_honours/mechanical/table.html"
-    # - "https://www.sydney.edu.au/handbooks/engineering/engineering_honours/civil/table.html"
-    # - "https://www.sydney.edu.au/handbooks/business_school/subject_areas/commerce_degree_core/commerce_degree_core_table.html"
-    # - "https://www.sydney.edu.au/handbooks/business_school/subject_areas/finance/finance_table.html"
+  degrees:
+    - name: "Bachelor of Advanced Computing"
+      url: "https://www.sydney.edu.au/handbooks/engineering/advanced_computing/advanced_computing_table.html"
+      majors:
+        - name: Computational Data Science
+          url: "https://www.sydney.edu.au/handbooks/engineering/advanced_computing/majors/computational_data_science_table.html"
+        - name: Computer Science
+          url: "https://www.sydney.edu.au/handbooks/engineering/advanced_computing/majors/computer_science_table.html"
+        - name: Cybersecurity
+          url: "https://www.sydney.edu.au/handbooks/engineering/advanced_computing/majors/cybersecurity_table.html"
+        - name: Software Development
+          url: "https://www.sydney.edu.au/handbooks/engineering/advanced_computing/majors/software_development_table.html"
+    - name: "Bachelor of Engineering (Honours)"
+      url: "https://www.sydney.edu.au/handbooks/engineering/engineering_honours/engineering_core_table.html"
+      majors:
+        - name: Civil
+          url: "https://www.sydney.edu.au/handbooks/engineering/engineering_honours/civil/table.html"
+        - name: Mechanical
+          url: "https://www.sydney.edu.au/handbooks/engineering/engineering_honours/mechanical/table.html"
+        - name: Mechatronic
+          url: "https://www.sydney.edu.au/handbooks/engineering/engineering_honours/mechatronic/table.html"
+        - name: Software
+          url: "https://www.sydney.edu.au/handbooks/engineering/engineering_honours/software/table.html"
+        - name: Electrical
+          url: "https://www.sydney.edu.au/handbooks/engineering/engineering_honours/electrical/table.html"
+        - name: Biomedical
+          url: "https://www.sydney.edu.au/handbooks/engineering/engineering_honours/biomedical/table.html"
+    - name: Bachelor of Nursing (Advanced Studies)
+      url: "https://www.sydney.edu.au/handbooks/medicine_health/coursework/nursing_advanced_studies/nursing_advanced_studies_tables_full_time.html"
   subject_options:
-    url_prefix: "https://www.sydney.edu.au/units/"
+    url_criteria:
+      prefix: "https://www.sydney.edu.au/units/"
+      container_type: tag
+      container_selector: strong
     start_line:
       value: "# "
       match_type: startsWith
     endLine:
       value: "Leadership for good starts here"
       match_type: equals
-  embedding_method: sbert

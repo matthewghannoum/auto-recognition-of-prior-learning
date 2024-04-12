@@ -1,18 +1,22 @@
-# UTS Computer Science
-
 university:
   name: University of Technology Sydney
   abbreviation: uts
-  degree_urls:
-    - "https://www.handbook.uts.edu.au/courses/c09119.html"
-    - "https://handbook.uts.edu.au/courses/c09066.html"
-    - "https://handbook.uts.edu.au/courses/c09004.html"
+  degrees:
+    - name: Bachelor of Computing Science (Honours)
+      code: C09119
+      url: "https://www.handbook.uts.edu.au/courses/c09119.html"
+    - name: Bachelor of Engineering (Honours)
+      code: C09066v6
+      url: "https://handbook.uts.edu.au/courses/c09066.html"
+    - name: Bachelor of Nursing
+      code: C10122v13
+      url: "https://www.handbook.uts.edu.au/courses/c10122.html"
   subject_options:
-    url_prefix: "https://handbook.uts.edu.au/subjects/"
+    url_criteria:
+      prefix: "https://handbook.uts.edu.au/subjects/"
     start_line:
       value: "# "
       matchType: startsWith
     end_line:
       value: "[UTS: Handbook 2024](https://www.handbook.uts.edu.au/index.html)"
       match_type: equals
-  embedding_method: sbert
