@@ -25,7 +25,7 @@ parser.add_argument(
     "--only-generate-embeddings", action="store_true", help="only generate embeddings"
 )
 parser.add_argument(
-    "--regenerate_existing_embeddings",
+    "--regenerate-existing-embeddings",
     action="store_true",
     help="regenerate existing embeddings",
 )
@@ -102,10 +102,15 @@ if is_enable_stepping:
 print("Getting set of subject codes...")
 
 university_subjects = get_subject_codes(university_configs)
+subject_to_majors = university_subjects.get_subject_to_majors()
 
 # save relationship between degrees, subjects and universities
-with open("./data/uni_degree_subjects_rels.json", "w") as f:
-    json.dump(university_subjects.get_degree_to_subjects(), f, indent=2)
+with open("./data/subject_to_degrees.json", "w") as f:
+    json.dump(university_subjects.get_subject_to_degrees(), f, indent=2)
+    
+# save relationship between subjects and majors
+with open("./data/subject_to_majors.json", "w") as f:
+    json.dump(subject_to_majors, f, indent=2)
 
 print("Subject codes retrieved successfully!")
 

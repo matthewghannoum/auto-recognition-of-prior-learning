@@ -44,25 +44,17 @@ class UniversitySubjects:
     def get_subjects(self, university_name: str):
         return list(self.subjects[university_name].keys())
 
-    def get_degree_to_subjects(self) -> list[tuple[str, dict[str, set[str]]]]:
-        uni_degree_subjects = []
+    def get_subject_to_degrees(self) -> dict[str, str]:
+        subject_to_degrees = {}
 
-        for university, subjects in self.subjects.items():
-            degree_to_subjects = {}
-
+        for subjects in self.subjects.values():
             for subject, degrees in subjects.items():
-                for degree in degrees:
-                    if degree not in degree_to_subjects:
-                        degree_to_subjects[degree] = set()
+                subject_to_degrees[subject] = subject_to_degrees.get(subject, set()).union(degrees)
+                
+        for subject in subject_to_degrees:
+            subject_to_degrees[subject] = list(subject_to_degrees[subject])
 
-                    degree_to_subjects[degree].add(subject)
-
-            for degree, subjects in degree_to_subjects.items():
-                degree_to_subjects[degree] = list(subjects)
-
-            uni_degree_subjects.append((university, degree_to_subjects))
-
-        return uni_degree_subjects
+        return subject_to_degrees
 
     def get_num_subjects(self):
         return sum([len(subjects) for subjects in self.subjects.values()])
@@ -81,6 +73,12 @@ class UniversitySubjects:
                     num_subject_per_degree[university][degree] += 1
 
         return num_subject_per_degree
+    
+    def get_subject_to_majors(self):
+        for subject in self.subject_to_majors:
+            self.subject_to_majors[subject] = list(self.subject_to_majors[subject])
+            
+        return self.subject_to_majors
 
     def is_subject_in_university(self, university_name: str, subject_code: str):
         return subject_code in self.subjects[university_name]

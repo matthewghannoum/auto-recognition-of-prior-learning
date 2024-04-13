@@ -20,6 +20,12 @@ def import_into_weaviate():
         ),  # Set this environment variable
     )
 
+    with open("./data/subject_to_degrees.json", "r") as f:
+        subject_to_degrees = json.load(f)
+
+    with open("./data/subject_to_majors.json", "r") as f:
+        subject_to_majors = json.load(f)
+
     for uni in get_top_level_dirs("./data"):
         for embedding_type_dir in get_top_level_dirs(
             f"./data/{uni}/subjects/embeddings"
@@ -51,11 +57,15 @@ def import_into_weaviate():
                 ) as f:
                     subject_embedding = json.load(f)
 
+                subjectCode = subject_embedding_filename.split(".")[0]
+
                 subject_objs.append(
                     wvc.data.DataObject(
                         vector=subject_embedding,
                         properties={
-                            "subjectCode": subject_embedding_filename.split(".")[0],
+                            "subjectCode": subjectCode,
+                            "majors": subject_to_majors.get(subjectCode, []),
+                            "degrees": subject_to_degrees.get(subjectCode, []),
                         },
                     )
                 )
