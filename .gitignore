@@ -11,7 +11,8 @@ prototyping/usyd/course_programs/*
 prototyping/query_weaviate.ipynb
 
 # etl pipeline
-etl-pipeline/etl_pipeline_venv/
+etl-pipeline/etl_st2.6_venv/
+etl-pipeline/etl_st2.2_venv/
 etl-pipeline/data/
 etl-pipeline/model_data/glove_6b_vectors/*
 !etl-pipeline/model_data/glove_6b_vectors/.gitkeep
