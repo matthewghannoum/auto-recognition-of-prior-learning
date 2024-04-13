@@ -38,6 +38,6 @@ university:
     start_line:
       value: "# "
       match_type: startsWith
-    endLine:
+    end_line:
       value: "Leadership for good starts here"
       match_type: equals

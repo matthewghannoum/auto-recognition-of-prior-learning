@@ -6,7 +6,7 @@ import yaml
 
 from generate_embeddings import EmbeddingModelNameType
 
-match_type = Literal["equals", "contains", "startsWith", "endsWith"]
+MatchType = Literal["equals", "contains", "startsWith", "endsWith"]
 
 
 @dataclass
@@ -19,8 +19,8 @@ class UrlCriteria:
 @dataclass
 class SubjectOptions:
     url_criteria: UrlCriteria
-    start_line: tuple[str, match_type]
-    end_line: tuple[str, match_type]
+    start_line: tuple[str, MatchType]
+    end_line: tuple[str, MatchType]
 
 
 @dataclass
@@ -39,6 +39,7 @@ class Degree:
         self.name = name
         self.code = code
         self.url = url
+        self.majors = []
 
     def add_major(self, major: Major):
         self.majors.append(major)
@@ -79,12 +80,12 @@ def get_university_configs():
 
                 degrees = []
 
-                for degree in university_config["degree"]:
+                for degree_config in university_config["degrees"]:
                     degree = Degree(
-                        degree["name"], degree["url"], degree.get("code", None)
+                        degree_config["name"], degree_config["url"], degree_config.get("code", None)
                     )
 
-                    for major in degree.get("majors", []):
+                    for major in degree_config.get("majors", []):
                         degree.add_major(Major(major["name"], major["url"]))
 
                     degrees.append(degree)

@@ -16,7 +16,7 @@ university:
       prefix: "https://handbook.uts.edu.au/subjects/"
     start_line:
       value: "# "
-      matchType: startsWith
+      match_type: startsWith
     end_line:
       value: "[UTS: Handbook 2024](https://www.handbook.uts.edu.au/index.html)"
       match_type: equals

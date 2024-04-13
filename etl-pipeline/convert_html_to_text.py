@@ -1,4 +1,5 @@
 import os
+import re
 
 from tqdm import tqdm
 import html2text
@@ -6,7 +7,6 @@ import strip_markdown
 
 from get_university_configs import UniversityConfig, MatchType
 from get_subject_codes import UniversitySubjects
-
 
 def clean_markdown(markdown_text: str, university_config: UniversityConfig) -> str:
     if (
@@ -52,11 +52,6 @@ def convert_html_to_text(
     university_configs: dict[str, UniversityConfig],
 ):
     for university in university_subjects.get_universities():
-        if os.path.exists(f"./data/{university}/subjects/markdown") and os.path.exists(
-            f"./data/{university}/subjects/text"
-        ):
-            continue
-
         os.makedirs(f"./data/{university}/subjects/markdown", exist_ok=True)
         os.makedirs(f"./data/{university}/subjects/text", exist_ok=True)
 

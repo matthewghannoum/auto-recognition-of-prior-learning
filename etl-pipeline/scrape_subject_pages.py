@@ -7,12 +7,17 @@ from get_subject_codes import UniversitySubjects
 from web_scraping.save_url_as_html import save_url_as_html
 
 def scrape_subject_pages(
-    university_configs: list[UniversityConfig],
+    university_configs: dict[str, UniversityConfig],
     university_subjects: UniversitySubjects,
 ):
     num_subject_pages_scraped = 0
 
     for university in university_subjects.get_universities():
+        url_prefix = university_configs[university].subject_options.url_criteria.prefix
+        
+        if url_prefix[-1] != "/":
+            url_prefix += "/"
+        
         os.makedirs(f"./data/{university}/subjects/html", exist_ok=True)
 
         for subject_code in tqdm(
@@ -29,7 +34,7 @@ def scrape_subject_pages(
 
             if subject_code not in existing_subject_codes:
                 save_url_as_html(
-                    f"{university_configs[university].subject_options.url_prefix}{subject_code}",
+                    f"{url_prefix}{subject_code}",
                     f"./data/{university}/subjects/html/{subject_code}.html",
                 )
                 num_subject_pages_scraped += 1
