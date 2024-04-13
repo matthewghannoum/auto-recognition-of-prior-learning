@@ -10,19 +10,46 @@ match_type = Literal["equals", "contains", "startsWith", "endsWith"]
 
 
 @dataclass
+class UrlCriteria:
+    prefix: str
+    container_type: str | None
+    container_selector: str | None
+
+
+@dataclass
 class SubjectOptions:
-    url_prefix: str
+    url_criteria: UrlCriteria
     start_line: tuple[str, match_type]
     end_line: tuple[str, match_type]
+
+
+@dataclass
+class Major:
+    name: str
+    url: str
+
+
+class Degree:
+    name: str
+    code: str | None
+    url: str
+    majors: list[Major]
+
+    def __init__(self, name: str, url: str, code: str | None = None):
+        self.name = name
+        self.code = code
+        self.url = url
+
+    def add_major(self, major: Major):
+        self.majors.append(major)
 
 
 @dataclass
 class UniversityConfig:
     name: str
     abbreviation: str
-    degree_urls: list[str]
+    degrees: list[Degree]
     subject_options: SubjectOptions
-    embedding_method: EmbeddingModelNameType
 
 
 def get_university_configs():
@@ -35,7 +62,11 @@ def get_university_configs():
 
                 subjectOptions = university_config["subject_options"]
                 subjectOptions = SubjectOptions(
-                    subjectOptions["url_prefix"],
+                    UrlCriteria(
+                        subjectOptions["url_criteria"]["prefix"],
+                        subjectOptions["url_criteria"].get("container_type", None),
+                        subjectOptions["url_criteria"].get("container_selector", None),
+                    ),
                     (
                         subjectOptions["start_line"]["value"],
                         subjectOptions["start_line"]["match_type"],
@@ -46,13 +77,24 @@ def get_university_configs():
                     ),
                 )
 
+                degrees = []
+
+                for degree in university_config["degree"]:
+                    degree = Degree(
+                        degree["name"], degree["url"], degree.get("code", None)
+                    )
+
+                    for major in degree.get("majors", []):
+                        degree.add_major(Major(major["name"], major["url"]))
+
+                    degrees.append(degree)
+
                 university_configs[university_config["abbreviation"]] = (
                     UniversityConfig(
                         university_config["name"],
                         university_config["abbreviation"],
-                        university_config["degree_urls"],
+                        degrees,
                         subjectOptions,
-                        university_config["embedding_method"],
                     )
                 )
 
