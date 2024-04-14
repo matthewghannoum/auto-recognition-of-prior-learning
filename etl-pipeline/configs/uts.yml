@@ -5,9 +5,53 @@ university:
     - name: Bachelor of Computing Science (Honours)
       code: C09119
       url: "https://www.handbook.uts.edu.au/courses/c09119.html"
+      majors:
+        - name: Artificial Intelligence and Data Analytics
+          url: "https://handbook.uts.edu.au/directory/maj10053.html"
+        - name: Business Information Systems Management
+          url: "https://handbook.uts.edu.au/directory/maj02080.html"
+        - name: Cybersecurity and Privacy
+          url: "https://handbook.uts.edu.au/directory/maj02900.html"
+        - name: Enterprise Software Development
+          url: "https://handbook.uts.edu.au/directory/maj03519.html"
+        - name: Interaction Design
+          url: "https://handbook.uts.edu.au/directory/maj02092.html"
+        - name: Mathematical Analysis
+          url: "https://handbook.uts.edu.au/directory/maj01156.html"
+        - name: Networking and Cybersecurity
+          url: "https://handbook.uts.edu.au/directory/maj03445.html"
+        - name: Quantum Information Science
+          url: "https://handbook.uts.edu.au/directory/maj02901.html"
     - name: Bachelor of Engineering (Honours)
       code: C09066v6
       url: "https://handbook.uts.edu.au/courses/c09066.html"
+      majors:
+        - name: Biomedical Engineering
+          url: "https://handbook.uts.edu.au/directory/maj03472.html"
+        - name: Civil Engineering
+          url: "https://handbook.uts.edu.au/directory/maj03001.html"
+        - name: Civil and Environmental Engineering
+          url: "https://handbook.uts.edu.au/directory/maj03002.html"
+        - name: Data Science Engineering
+          url: "https://handbook.uts.edu.au/directory/maj03518.html"
+        - name: Electrical Engineering
+          url: "https://handbook.uts.edu.au/directory/maj03005.html"
+        - name: Electronic Engineering
+          url: "https://handbook.uts.edu.au/directory/maj03524.html"
+        - name: Mechanical Engineering
+          url: "https://handbook.uts.edu.au/directory/maj03007.html"
+        - name: Mechanical and Mechatronic Engineering
+          url: "https://handbook.uts.edu.au/directory/maj03012.html"
+        - name: Mechatronic Engineering
+          url: "https://handbook.uts.edu.au/directory/maj03504.html"
+        - name: Software Engineering
+          url: "https://handbook.uts.edu.au/directory/maj03523.html"
+        - name: Electrical and Electronic Engineering
+          url: "https://handbook.uts.edu.au/directory/maj03537.html"
+        - name: Renewable Energy Engineering
+          url: "https://handbook.uts.edu.au/directory/maj03549.html"
+        - name: Chemical Process Engineering
+          url: "https://handbook.uts.edu.au/directory/maj03544.html"
     - name: Bachelor of Nursing
       code: C10122v13
       url: "https://www.handbook.uts.edu.au/courses/c10122.html"
