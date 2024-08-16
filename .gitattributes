@@ -1,3 +1,5 @@
 *.html linguist-vendored
 *.ipynb linguist-vendored
+*.tsx linguist-vendored
+*.ts linguist-vendored
 deprecated/* linguist-vendored
